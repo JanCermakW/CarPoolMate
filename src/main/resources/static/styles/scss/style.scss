@@ -36,3 +36,34 @@ table {
 .me-2 {
   margin-right: .5rem!important;
 }
+
+.color-primary {
+  color: #6435f0;
+}
+
+.btn-primary {
+  background-color: #6435f0 !important;
+  border-color: #6435f0 !important;
+  color: #fff !important;
+  &:hover {
+    background-color: #4f2abd !important;
+    border-color: #4f2abd !important;
+    color: #fff !important;
+  }
+}
+
+.form-control:focus {
+  border-color: #4f2abd !important;
+  box-shadow: 0 0 0 .25rem rgba(100, 53, 240, .25) !important;
+}
+
+a {
+  color: #6435f0 !important;
+  &:hover {
+    color: #4f2abd !important;
+  }
+}
+
+.card {
+  box-shadow: 0 2px 6px 2px rgba(100, 53, 240, .25) !important;
+}

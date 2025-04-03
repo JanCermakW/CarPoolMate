@@ -25,6 +25,12 @@
                     </div>
                 </div>
 
+                <div th:if="${param.errorGeneral}">
+                    <div class="alert alert-danger">
+                        Nastala chyba, zkuste to později nebo nás kontaktujte.
+                    </div>
+                </div>
+
                 <div th:if="${param.errorPasswd}">
                     <div class="alert alert-danger">
                         Heslo musí mít minimálně 8 znaků a jedno velké písmeno!

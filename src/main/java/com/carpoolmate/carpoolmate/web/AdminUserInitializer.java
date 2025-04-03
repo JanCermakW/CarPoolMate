@@ -29,9 +29,9 @@ public class AdminUserInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        createRoleIfNotExists(RoleType.ADMIN);
-        createRoleIfNotExists(RoleType.USER);
-        createRoleIfNotExists(RoleType.DRIVER);
+        createRoleIfNotExists(RoleType.ROLE_ADMIN);
+        createRoleIfNotExists(RoleType.ROLE_DRIVER);
+        createRoleIfNotExists(RoleType.ROLE_USER);
 
         User user = userService.getUserByEmail("admin@example.com");
         if (user == null) {
@@ -43,7 +43,7 @@ public class AdminUserInitializer implements CommandLineRunner {
             adminUser.setEnabled(true);
             adminUser.setPassword(passwordEncoder.encode("admin"));
 
-            adminUser.setRole(roleRepository.findByName(RoleType.ADMIN));
+            adminUser.setRole(roleRepository.findByName(RoleType.ROLE_ADMIN));
 
             userService.saveUserStartup(adminUser);
         }

@@ -52,7 +52,9 @@ public class AuthController {
             return "redirect:/registration?errorPasswd";
         }
 
-        userService.save(registrationDto);
+        if (userService.save(registrationDto) == null) {
+            return "redirect:/registration?errorGeneral";
+        }
 
         User currentUser = userService.getUserByEmail(registrationDto.getEmail());
 

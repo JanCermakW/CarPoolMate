@@ -2,6 +2,7 @@ package com.carpoolmate.carpoolmate.service;
 
 import com.carpoolmate.carpoolmate.exception.UserNotFoundException;
 import com.carpoolmate.carpoolmate.model.Role;
+import com.carpoolmate.carpoolmate.model.RoleType;
 import com.carpoolmate.carpoolmate.model.User;
 import com.carpoolmate.carpoolmate.repository.RoleRepository;
 import com.carpoolmate.carpoolmate.repository.UserRepository;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService{
                 registrationDto.getLastName(),
                 registrationDto.getEmail(),
                 passwordEncoder.encode(registrationDto.getPassword()),
-                roleRepository.findByName(registrationDto.getRole())
+                roleRepository.findByName(RoleType.ROLE_USER)
         );
 
         String randomCode = PasswordGenerator.generateRandomPassword(64);
