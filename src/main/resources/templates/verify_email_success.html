@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ověření | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header">
+</div>
+
+<div class="container">
+    <div class="row mt-5 mx-1">
+        <div class="col-md-6 offset-md-3 card p-5">
+            <div>
+                <div class="alert alert-info text-center">
+                    <h2>Email úspěšně ověřen!!</h2>
+                    <a href="/" class="btn btn-primary mt-4">Zde se přihlašte</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Všichni uživatelé | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-12 text-left mb-2">
+            <h1>List všech uživatelů</h1>
+        </div>
+        <div class="col-2">
+            <a th:href="@{/registration}" class="btn btn-primary btn-sm mb-3 p-2 fw-bold">Zaregistrovat uživatele</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Jméno</th>
+                            <th scope="col">Příjmení</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Akce</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each = "user: ${users}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.firstName}"></td>
+                            <td th:text="${user.lastName}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td>
+                                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-primary mb-1">Upravit</a>
+                                <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="btn btn-danger mb-1">Smazat</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

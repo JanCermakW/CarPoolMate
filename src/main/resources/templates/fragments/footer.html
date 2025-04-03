@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<footer class="footer" th:fragment="footer">
+    <div class="container">
+        <span id="year" class="text-muted"></span> CarPoolMate
+    </div>
+    <script>
+        var currentYear = new Date().getFullYear();
+        document.getElementById("year").textContent = "@" + currentYear;
+    </script>
+</footer>
+</body>
+</html>
