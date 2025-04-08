@@ -84,4 +84,27 @@ a:hover {
   box-shadow: 0 2px 6px 2px rgba(100, 53, 240, 0.25) !important;
 }
 
+.position-relative {
+  position: relative;
+}
+
+#startLocationSuggestions, #destinationSuggestions {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 10;
+}
+
+#startLocationSuggestions li, #destinationSuggestions li {
+  cursor: pointer;
+  padding: 5px;
+}
+
+#startLocationSuggestions li:hover, #destinationSuggestions li:hover {
+  background-color: #f1f1f1;
+}
+
 /*# sourceMappingURL=style.css.map */

@@ -43,4 +43,14 @@ public class RideServiceImpl implements RideService{
     public Ride updateRide(Ride ride) {
         return rideRepository.save(ride);
     }
+
+    public List<String> getLocationSuggestions(String query, String field) {
+        if (field.equals("startLocation")) {
+            // Here you can retrieve locations from the database that match the query
+            return rideRepository.findDistinctLocations(query);
+        } else if (field.equals("destination")) {
+            return rideRepository.findDistinctDestinations(query);
+        }
+        return rideRepository.findDistinctLocations(query);
+    }
 }

@@ -21,12 +21,52 @@
     <!-- Schovaný form pro filtraci -->
     <div class="collapse" id="filterForm">
         <form class="row g-3 mb-4" th:action="@{/rides/filter}" method="get">
-            <div class="col-md-3">
-                <input type="text" name="startLocation" class="form-control" placeholder="Odkud">
+            <div class="col-md-3 position-relative">
+                <input type="text" id="startLocation" name="startLocation" class="form-control" placeholder="Odkud" autocomplete="off">
+                <ul id="startLocationSuggestions" class="list-group mt-2" style="display:none;"></ul>
             </div>
-            <div class="col-md-3">
-                <input type="text" name="destination" class="form-control" placeholder="Kam">
+
+            <div class="col-md-3 position-relative">
+                <input type="text" id="destination" name="destination" class="form-control" placeholder="Kam" autocomplete="off">
+                <ul id="destinationSuggestions" class="list-group mt-2" style="display:none;"></ul>
             </div>
+
+            <script>
+                // Function to fetch suggestions based on user input
+                function fetchSuggestions(inputId, suggestionsListId, field) {
+                    let inputValue = document.getElementById(inputId).value;
+                    if (inputValue.length >= 2) {  // Start fetching suggestions after 2 characters
+                        fetch(`/api/locations/suggestions?query=${inputValue}&field=${field}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                let suggestionsList = document.getElementById(suggestionsListId);
+                                suggestionsList.innerHTML = '';  // Clear previous suggestions
+                                data.forEach(location => {
+                                    let listItem = document.createElement('li');
+                                    listItem.classList.add('list-group-item');
+                                    listItem.textContent = location;
+                                    listItem.addEventListener('click', function () {
+                                        document.getElementById(inputId).value = location;
+                                        suggestionsList.style.display = 'none'; // Hide suggestions after selection
+                                    });
+                                    suggestionsList.appendChild(listItem);
+                                });
+                                suggestionsList.style.display = data.length > 0 ? 'block' : 'none'; // Show or hide based on results
+                            });
+                    } else {
+                        document.getElementById(suggestionsListId).style.display = 'none';
+                    }
+                }
+
+                // Event listeners for the input fields
+                document.getElementById('startLocation').addEventListener('input', function () {
+                    fetchSuggestions('startLocation', 'startLocationSuggestions', 'startLocation');
+                });
+
+                document.getElementById('destination').addEventListener('input', function () {
+                    fetchSuggestions('destination', 'destinationSuggestions', 'destination');
+                });
+            </script>
             <div class="col-md-2">
                 <input type="date" name="departureDate" class="form-control">
             </div>

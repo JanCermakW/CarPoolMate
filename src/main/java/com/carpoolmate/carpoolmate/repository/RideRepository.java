@@ -35,4 +35,11 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
             Integer minSeats
     );
 
+    @Query("SELECT DISTINCT r.startLocation FROM Ride r WHERE LOWER(r.startLocation) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<String> findDistinctLocations(@Param("query") String query);
+
+    // You can also add a similar query for destination
+    @Query("SELECT DISTINCT r.destination FROM Ride r WHERE LOWER(r.destination) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<String> findDistinctDestinations(@Param("query") String query);
+
 }

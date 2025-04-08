@@ -16,4 +16,7 @@ public interface RideService {
     List<Ride> filterRides(String startLocation, String destination, LocalDateTime from, LocalDateTime to, Double maxPrice, Integer minSeats);
 
     public Ride updateRide(Ride ride);
+
+    public List<String> getLocationSuggestions(String query, String field);
+
 }
