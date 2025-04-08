@@ -14,7 +14,7 @@
                 <li class="nav-item" sec:authorize="hasRole('USER')">
                     <a class="nav-link" aria-current="page" href="/"><i class="fa-solid fa-house"></i> Domů</a>
                 </li>
-                <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
+                <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link dropdown-toggle" th:href="@{/admin}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Administrace
                     </a>
@@ -25,6 +25,7 @@
                     </ul>
                 </li>
             </ul>
+            <a sec:authorize="hasRole('DRIVER')" class="btn btn-outline-primary m-2" th:href="@{/rides/create}">Vytvořit jízdu</a>
             <a sec:authorize="isAuthenticated()" class="btn btn-outline-danger m-2" th:href="@{/logout}">Odhlásit se</a>
             <a sec:authorize="isAuthenticated()" class="btn btn-outline-primary m-2" th:href="@{/user}"><i class="fa-solid fa-user"></i></a>
         </div>

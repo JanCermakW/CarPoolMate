@@ -68,6 +68,18 @@ a:hover {
   color: #4f2abd !important;
 }
 
+.btn-outline-primary {
+  border-color: #6435f0 !important;
+}
+.btn-outline-primary:hover {
+  background-color: #6435f0 !important;
+  color: #fff !important;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  background-color: #6435f0 !important;
+}
+
 .card {
   box-shadow: 0 2px 6px 2px rgba(100, 53, 240, 0.25) !important;
 }

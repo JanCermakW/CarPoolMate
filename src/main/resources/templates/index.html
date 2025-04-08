@@ -9,7 +9,65 @@
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container mt-5">
+    <h1 class="mb-4">Najít jízdu</h1>
 
+    <!-- Tlačítko pro rozbalení filtrace -->
+    <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterForm"
+            aria-expanded="false" aria-controls="filterForm">
+        <i class="fas fa-filter"></i> Filtrace
+    </button>
+
+
+    <!-- Schovaný form pro filtraci -->
+    <div class="collapse" id="filterForm">
+        <form class="row g-3 mb-4" th:action="@{/rides/filter}" method="get">
+            <div class="col-md-3">
+                <input type="text" name="startLocation" class="form-control" placeholder="Odkud">
+            </div>
+            <div class="col-md-3">
+                <input type="text" name="destination" class="form-control" placeholder="Kam">
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="departureDate" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="maxPrice" class="form-control" placeholder="Max. cena">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="minSeats" class="form-control" placeholder="Min. místa">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Vyhledat</button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- RIDE CARDS -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${rides != null}">
+        <div class="col" th:each="ride : ${rides}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${ride.startLocation} + ' → ' + ${ride.destination}"></h5>
+                    <p class="card-text">
+                        <strong>Datum:</strong> <span th:text="${ride.formattedDepartureTime}"></span><br>
+                        <strong>Cena za sedadlo:</strong> <span th:text="${ride.pricePerSeat} + ' Kč'"></span><br>
+                        <strong>Volná místa:</strong> <span th:text="${ride.availableSeats}"></span><br>
+                        <strong>Řidič:</strong>
+                        <a th:href="@{/profiles/{id}(id=${ride.driver.id})}"
+                           th:text="${ride.driver.getFirstName() + ' ' + ride.driver.getLastName()}"></a>
+
+                    </p>
+                    <a th:href="@{'/rides/' + ${ride.id}}" class="btn btn-outline-primary">Zobrazit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No rides found -->
+    <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
+        Žádné jízdy nebyly nalezeny pro zadané parametry.
+    </div>
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>

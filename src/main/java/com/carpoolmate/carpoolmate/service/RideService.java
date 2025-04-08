@@ -2,6 +2,8 @@ package com.carpoolmate.carpoolmate.service;
 
 import com.carpoolmate.carpoolmate.model.Ride;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RideService {
@@ -9,4 +11,7 @@ public interface RideService {
     public List<Ride> getAvailableRides();
 
     public String reserveRide(Long rideId, String username);
+
+    List<Ride> findAll();
+    List<Ride> filterRides(String startLocation, String destination, LocalDate departureDate, Double maxPrice, Integer minSeats);
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vytvořit jízdu | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <h2>Vytvořit novou jízdu</h2>
+    <form th:action="@{/rides/create}" th:object="${ride}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Začátek</label>
+            <input type="text" class="form-control" th:field="*{startLocation}" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Destinace</label>
+            <input type="text" class="form-control" th:field="*{destination}" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Čas a datum odjezdu</label>
+            <input type="datetime-local" class="form-control" th:field="*{departureTime}" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cena za místo</label>
+            <input type="number" class="form-control" th:field="*{pricePerSeat}" step="0.01" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Volné místa</label>
+            <input type="number" class="form-control" th:field="*{availableSeats}" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Vytvořit</button>
+    </form>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

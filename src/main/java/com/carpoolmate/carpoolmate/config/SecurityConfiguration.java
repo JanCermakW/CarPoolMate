@@ -3,6 +3,8 @@ package com.carpoolmate.carpoolmate.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -54,5 +56,14 @@ public class SecurityConfiguration {
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        // Definice hierarchie: ADMIN > DRIVER > USER
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_DRIVER \n ROLE_DRIVER > ROLE_USER");
+        return roleHierarchy;
+    }
+
 }
 

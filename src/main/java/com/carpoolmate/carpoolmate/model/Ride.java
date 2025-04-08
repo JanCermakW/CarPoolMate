@@ -25,6 +25,9 @@ public class Ride {
     @Column(nullable = false)
     private LocalDateTime departureTime;
 
+    private String formattedDepartureTime;
+
+
     private boolean available;
 
     @Column(nullable = false)
@@ -76,6 +79,15 @@ public class Ride {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getFormattedDepartureTime() {
+        return formattedDepartureTime;
+    }
+
+    public void setFormattedDepartureTime(String formattedDepartureTime) {
+        this.formattedDepartureTime = formattedDepartureTime;
+    }
+
 
     public User getDriver() {
         return driver;
