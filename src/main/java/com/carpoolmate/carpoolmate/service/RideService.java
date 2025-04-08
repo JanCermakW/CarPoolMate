@@ -13,5 +13,7 @@ public interface RideService {
     public String reserveRide(Long rideId, String username);
 
     List<Ride> findAll();
-    List<Ride> filterRides(String startLocation, String destination, LocalDate departureDate, Double maxPrice, Integer minSeats);
+    List<Ride> filterRides(String startLocation, String destination, LocalDateTime from, LocalDateTime to, Double maxPrice, Integer minSeats);
+
+    public Ride updateRide(Ride ride);
 }

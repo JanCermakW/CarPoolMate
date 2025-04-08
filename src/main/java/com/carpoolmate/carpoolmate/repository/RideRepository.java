@@ -22,13 +22,15 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     @Query("SELECT r FROM Ride r WHERE " +
             "(:startLocation IS NULL OR LOWER(r.startLocation) LIKE LOWER(CONCAT('%', :startLocation, '%'))) AND " +
             "(:destination IS NULL OR LOWER(r.destination) LIKE LOWER(CONCAT('%', :destination, '%'))) AND " +
-            "(:departureDate IS NULL OR r.departureTime >= :departureDate) AND " +
+            "(:fromDate IS NULL OR r.departureTime >= :fromDate) AND " +
+            "(:toDate IS NULL OR r.departureTime < :toDate) AND " +  // notice: '<' instead of '<='
             "(:maxPrice IS NULL OR r.pricePerSeat <= :maxPrice) AND " +
             "(:minSeats IS NULL OR r.availableSeats >= :minSeats)")
     List<Ride> filterRides(
             String startLocation,
             String destination,
-            LocalDateTime departureDate,
+            LocalDateTime fromDate,
+            LocalDateTime toDate,
             Double maxPrice,
             Integer minSeats
     );

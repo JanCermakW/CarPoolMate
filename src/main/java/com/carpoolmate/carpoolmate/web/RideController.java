@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -32,6 +33,7 @@ public class RideController {
         rides.forEach(ride -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             ride.setFormattedDepartureTime(ride.getDepartureTime().format(formatter));
+            rideService.updateRide(ride);
         });
         model.addAttribute("rides", rides);
 
@@ -43,12 +45,25 @@ public class RideController {
             @RequestParam(required = false) String startLocation,
             @RequestParam(required = false) String destination,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate departureDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "HH:mm") LocalTime departureTime,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Integer minSeats,
             Model model) {
 
-        List<Ride> filteredRides = rideService.filterRides(startLocation, destination, departureDate, maxPrice, minSeats);
-        model.addAttribute("rides", filteredRides);
+        LocalDateTime from = null;
+        LocalDateTime to = null;
+
+        // Handling the departure date and time
+        if (departureDate != null) {
+            from = departureDate.atStartOfDay();  // Start of the selected date
+            if (departureTime != null) {
+                from = LocalDateTime.of(departureDate, departureTime);  // Set custom time for the start
+            }
+            to = departureDate.plusDays(1).atStartOfDay();  // Upper bound (exclusive), to the start of the next day
+        }
+
+        List<Ride> rides = rideService.filterRides(startLocation, destination, from, to, maxPrice, minSeats);
+        model.addAttribute("rides", rides);
         return "index";
     }
 

@@ -35,11 +35,12 @@ public class RideServiceImpl implements RideService{
     }
 
     @Override
-    public List<Ride> filterRides(String startLocation, String destination, LocalDate departureDate, Double maxPrice, Integer minSeats) {
-        LocalDateTime startOfDay = null;
-        if (departureDate != null) {
-            startOfDay = departureDate.atStartOfDay();
-        }
-        return rideRepository.filterRides(startLocation, destination, startOfDay, maxPrice, minSeats);
+    public List<Ride> filterRides(String startLocation, String destination, LocalDateTime from, LocalDateTime to, Double maxPrice, Integer minSeats) {
+        return rideRepository.filterRides(startLocation, destination, from, to, maxPrice, minSeats);
+    }
+
+    @Override
+    public Ride updateRide(Ride ride) {
+        return rideRepository.save(ride);
     }
 }
