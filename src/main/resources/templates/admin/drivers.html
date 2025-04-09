@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - schvalování řidičů | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <!-- Success or error message -->
+    <div th:if="${param.success}">
+        <div class="alert alert-success">Úspěšně schválený řidič</div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Jméno a přijmení</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Řidičský průkaz</th>
+                        <th scope="col">Akce</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="driver : ${pendingDrivers}">
+                        <td th:text="${driver.id}"></td>
+                        <td th:text="${driver.firstName} + ' ' + ${driver.lastName}"></td>
+                        <td th:text="${driver.email}"></td>
+                        <td>
+                            <!-- Vytvoření odkazu místo obrázku -->
+                            <a th:href="@{${driver.idPhotoPath}}" target="_blank" title="Zobrazit řidičský průkaz">
+                                <!-- Náhled obrázku uvnitř odkazu -->
+                                <img th:src="@{${driver.idPhotoPath}}" alt="Driver's License" style="max-width: 150px; max-height: 150px;"/>
+                            </a>
+                        </td>
+                        <td>
+                            <form th:action="@{'/admin/drivers/approve/' + ${driver.id}}" method="post">
+                                <button type="submit" class="btn btn-primary mb-1">Schválit</button>
+                            </form>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${pendingDrivers.isEmpty()}">
+                        <td colspan="5" class="text-center" style="color: gray;">Nejsou žádný řidiči k potvrzení</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

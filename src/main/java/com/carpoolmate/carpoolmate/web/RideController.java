@@ -64,6 +64,16 @@ public class RideController {
 
         List<Ride> rides = rideService.filterRides(startLocation, destination, from, to, maxPrice, minSeats);
         model.addAttribute("rides", rides);
+
+        // Přidáváme hodnoty filtrů do modelu
+        model.addAttribute("startLocation", startLocation);
+        model.addAttribute("destination", destination);
+        model.addAttribute("departureDate", departureDate);
+        model.addAttribute("departureTime", departureTime);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("minSeats", minSeats);
+
+
         return "index";
     }
 
@@ -89,8 +99,53 @@ public class RideController {
 
         // Uložíme jízdu
         rideService.createRide(ride);
-        return "redirect:/";
+        return "redirect:/?successRideCreate";
     }
+
+    @GetMapping("/rides/{id}")
+    public String getRideDetails(@PathVariable Long id, Model model) {
+        Ride ride = rideService.getRideById(id);
+
+        if (ride == null) {
+            return "redirect:/rides?error=notfound"; // Jízda nenalezena
+        }
+
+        // Načtení aktuálního uživatele
+        User currentUser = rideService.getCurrentUser();
+
+        // Zjistíme, jestli je aktuálně přihlášený uživatel řidičem jízdy
+        boolean isDriver = ride.getDriver().getEmail().equals(currentUser.getEmail());
+
+        model.addAttribute("ride", ride); // Ride objekt
+        model.addAttribute("isDriver", isDriver); // Pokud je uživatel řidičem
+        return "ride-details";
+
+    }
+
+    @PostMapping("/rides/book/{id}")
+    public String bookRide(@PathVariable Long id, Model model
+    ) {
+        try {
+            rideService.bookRide(id); // Logika rezervace v RideService
+            return "redirect:/rides/{id}?success=reserved";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "redirect:/rides/{id}?error=bookingFailed"; // Chyba při rezervaci
+        }
+    }
+
+    // Zobrazení seznamu pasažérů pro řidiče
+    @GetMapping("/rides/{id}/passengers")
+    public String viewPassengers(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("passengers", rideService.getPassengersForRide(id));
+            return "ride-passengers";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "redirect:/rides/{id}/passengers?error=passengersNotFound";
+        }
+    }
+
 
 
 }

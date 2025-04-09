@@ -12,6 +12,11 @@ public class UserRegistrationDto {
     private String email;
     private String password;
 
+    private String carType;
+    private String licensePlate;
+    private String driverImagePath;
+
+
     private RoleType role;
 
     public UserRegistrationDto(String firstName, String lastName, String email, String password) {
@@ -64,5 +69,29 @@ public class UserRegistrationDto {
 
     public void setRole(RoleType role) {
         this.role = role;
+    }
+
+    public String getCarType() {
+        return carType;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public String getDriverImagePath() {
+        return driverImagePath;
+    }
+
+    public void setDriverImagePath(String driverImage) {
+        this.driverImagePath = driverImage;
     }
 }

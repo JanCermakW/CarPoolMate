@@ -35,4 +35,14 @@ public interface UserService extends UserDetailsService {
 
     void sendEmail(User user, String content, String subject) throws MessagingException, UnsupportedEncodingException;
     boolean validatePassword(String password);
+
+    User saveDriver(UserRegistrationDto registrationDto);
+
+    List<User> getPendingDrivers();
+
+    void approveDriver(Long driverId);
+
+    public void deleteUserById(Long id);
+
+
 }

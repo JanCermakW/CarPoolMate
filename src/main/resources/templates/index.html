@@ -11,6 +11,11 @@
 <div class="container mt-5">
     <h1 class="mb-4">Najít jízdu</h1>
 
+    <div th:if="${param.successRideCreate}" id="Message">
+        <div class="alert alert-success">Úspěšně vytvořena jízda</div>
+    </div>
+
+
     <!-- Tlačítko pro rozbalení filtrace -->
     <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterForm"
             aria-expanded="false" aria-controls="filterForm">
@@ -22,62 +27,25 @@
     <div class="collapse" id="filterForm">
         <form class="row g-3 mb-4" th:action="@{/rides/filter}" method="get">
             <div class="col-md-3 position-relative">
-                <input type="text" id="startLocation" name="startLocation" class="form-control" placeholder="Odkud" autocomplete="off">
+                <input type="text" id="startLocation" name="startLocation" class="form-control" placeholder="Odkud" th:value="${startLocation}" autocomplete="off">
                 <ul id="startLocationSuggestions" class="list-group mt-2" style="display:none;"></ul>
             </div>
 
             <div class="col-md-3 position-relative">
-                <input type="text" id="destination" name="destination" class="form-control" placeholder="Kam" autocomplete="off">
+                <input type="text" id="destination" name="destination" class="form-control" placeholder="Kam" th:value="${destination}" autocomplete="off">
                 <ul id="destinationSuggestions" class="list-group mt-2" style="display:none;"></ul>
             </div>
-
-            <script>
-                // Function to fetch suggestions based on user input
-                function fetchSuggestions(inputId, suggestionsListId, field) {
-                    let inputValue = document.getElementById(inputId).value;
-                    if (inputValue.length >= 2) {  // Start fetching suggestions after 2 characters
-                        fetch(`/api/locations/suggestions?query=${inputValue}&field=${field}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                let suggestionsList = document.getElementById(suggestionsListId);
-                                suggestionsList.innerHTML = '';  // Clear previous suggestions
-                                data.forEach(location => {
-                                    let listItem = document.createElement('li');
-                                    listItem.classList.add('list-group-item');
-                                    listItem.textContent = location;
-                                    listItem.addEventListener('click', function () {
-                                        document.getElementById(inputId).value = location;
-                                        suggestionsList.style.display = 'none'; // Hide suggestions after selection
-                                    });
-                                    suggestionsList.appendChild(listItem);
-                                });
-                                suggestionsList.style.display = data.length > 0 ? 'block' : 'none'; // Show or hide based on results
-                            });
-                    } else {
-                        document.getElementById(suggestionsListId).style.display = 'none';
-                    }
-                }
-
-                // Event listeners for the input fields
-                document.getElementById('startLocation').addEventListener('input', function () {
-                    fetchSuggestions('startLocation', 'startLocationSuggestions', 'startLocation');
-                });
-
-                document.getElementById('destination').addEventListener('input', function () {
-                    fetchSuggestions('destination', 'destinationSuggestions', 'destination');
-                });
-            </script>
             <div class="col-md-2">
-                <input type="date" name="departureDate" class="form-control">
+                <input type="date" name="departureDate" th:value="${departureDate}" class="form-control">
             </div>
             <div class="col-md-2">
-                <input type="time" name="departureTime" class="form-control" placeholder="Čas od">
+                <input type="time" name="departureTime" th:value="${departureTime}" class="form-control" placeholder="Čas od">
             </div>
             <div class="col-md-2">
-                <input type="number" name="maxPrice" class="form-control" placeholder="Max. cena">
+                <input type="number" name="maxPrice" th:value="${maxPrice}" class="form-control" placeholder="Max. cena">
             </div>
             <div class="col-md-2">
-                <input type="number" name="minSeats" class="form-control" placeholder="Min. místa">
+                <input type="number" name="minSeats" th:value="${minSeats}" class="form-control" placeholder="Min. místa">
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Vyhledat</button>
@@ -112,7 +80,7 @@
         Žádné jízdy nebyly nalezeny pro zadané parametry.
     </div>
 </div>
-
+<div th:replace="fragments/scripty"></div>
 <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

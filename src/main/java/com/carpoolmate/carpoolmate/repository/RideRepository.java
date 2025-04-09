@@ -42,4 +42,5 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     @Query("SELECT DISTINCT r.destination FROM Ride r WHERE LOWER(r.destination) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<String> findDistinctDestinations(@Param("query") String query);
 
+    Ride getRideById(Long id);
 }

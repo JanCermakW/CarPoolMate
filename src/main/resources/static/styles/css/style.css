@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html {
   position: relative;
   min-height: 100%;
@@ -105,6 +106,37 @@ a:hover {
 
 #startLocationSuggestions li:hover, #destinationSuggestions li:hover {
   background-color: #f1f1f1;
+}
+
+#driverSection {
+  overflow: hidden; /* Zakryj obsah při přechodu */
+  height: 0;
+  transition: height 0.5s ease; /* Hladký přechod výšky */
+  display: none; /* Skryj element při výchozím stavu */
+}
+
+.btn-danger {
+  color: white !important;
+}
+
+.btn-secondary {
+  background-color: #35f0c5 !important;
+  border-color: #35f0c5 !important;
+  color: #fff !important;
+}
+.btn-secondary:hover {
+  background-color: #22987d !important;
+  border-color: #22987d !important;
+  color: #fff !important;
+}
+
+.btn-outline-secondary {
+  border-color: #35f0c5 !important;
+  color: #35f0c5 !important;
+}
+.btn-outline-secondary:hover {
+  background-color: #35f0c5 !important;
+  color: #fff !important;
 }
 
 /*# sourceMappingURL=style.css.map */

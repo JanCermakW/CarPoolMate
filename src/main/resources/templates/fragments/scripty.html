@@ -1,0 +1,91 @@
+<script>
+  // Function to fetch suggestions based on user input
+  function fetchSuggestions(inputId, suggestionsListId, field) {
+    let inputValue = document.getElementById(inputId).value;
+    if (inputValue.length >= 2) {  // Start fetching suggestions after 2 characters
+      fetch(`/api/locations/suggestions?query=${inputValue}&field=${field}`)
+              .then(response => response.json())
+              .then(data => {
+                let suggestionsList = document.getElementById(suggestionsListId);
+                suggestionsList.innerHTML = '';  // Clear previous suggestions
+                data.forEach(location => {
+                  let listItem = document.createElement('li');
+                  listItem.classList.add('list-group-item');
+                  listItem.textContent = location;
+                  listItem.addEventListener('click', function () {
+                    document.getElementById(inputId).value = location;
+                    suggestionsList.style.display = 'none'; // Hide suggestions after selection
+                  });
+                  suggestionsList.appendChild(listItem);
+                });
+                suggestionsList.style.display = data.length > 0 ? 'block' : 'none'; // Show or hide based on results
+              });
+    } else {
+      document.getElementById(suggestionsListId).style.display = 'none';
+    }
+  }
+
+  // Event listeners for the input fields
+  document.getElementById('startLocation').addEventListener('input', function () {
+    fetchSuggestions('startLocation', 'startLocationSuggestions', 'startLocation');
+  });
+
+  document.getElementById('destination').addEventListener('input', function () {
+    fetchSuggestions('destination', 'destinationSuggestions', 'destination');
+  });
+</script>
+
+<!-- Skript pro zobrazení/skrývání DRIVER sekce -->
+<!-- Upravený JavaScript pro smooth animaci -->
+<script>
+    const registerAsDriverCheckbox = document.getElementById('registerAsDriver');
+    const driverSection = document.getElementById('driverSection');
+
+    // Funkce pro plynulé rozbalení sekce
+    const expandSection = (section) => {
+        section.style.display = 'block'; // Zviditelnění sekce
+        section.style.overflow = 'hidden'; // Zajistíme, že během animace obsah zůstane skrytý
+        const sectionHeight = section.scrollHeight + 'px'; // Výpočet přirozené výšky
+        section.style.height = sectionHeight; // Nastavení animované výšky
+    };
+
+    // Funkce pro plynulé zabalení sekce
+    const collapseSection = (section) => {
+        section.style.height = section.scrollHeight + 'px'; // Počáteční výška pro zabalení
+        requestAnimationFrame(() => {
+            section.style.height = '0'; // Nastavení výšky na nulu
+            section.style.overflow = 'hidden'; // Skrytí obsahu během animace
+        });
+    };
+
+    // Obsluha checkboxu
+    registerAsDriverCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+            expandSection(driverSection); // Spustí rozbalení
+        } else {
+            collapseSection(driverSection); // Spustí zabalení
+        }
+    });
+
+    // Přidání obsluhy události transitionend
+    driverSection.addEventListener('transitionend', () => {
+        if (driverSection.style.height === '0px') {
+            driverSection.style.display = 'none'; // Skryje sekci po dokončení sbalení
+            driverSection.style.overflow = 'hidden'; // Skrytí obsahu po zabalení
+        } else {
+            driverSection.style.height = 'auto'; // Reset na automatickou výšku po rozbalení
+            driverSection.style.overflow = 'visible'; // Obsah je po rozbalení viditelný
+        }
+    });
+</script>
+
+
+<script>
+    // Skript pro zmizení zprávy po 10 sekundách
+    setTimeout(function() {
+        var successMessage = document.getElementById('Message');
+        if (successMessage) {
+            successMessage.style.display = 'none'; // Skryje zprávu
+        }
+    }, 10000); // 10 000 ms = 10 sekund
+</script>

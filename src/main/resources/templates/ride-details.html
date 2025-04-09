@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Detail jízdy | CarPoolMate</title>
+  <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+  <h1 class="mb-3">Detail jízdy</h1>
+
+  <div th:if="${param.success}">
+    <div class="alert alert-success">Úspěšně rezervované místo</div>
+  </div>
+
+  <div th:if="${param.error}">
+    <div class="alert alert-danger">Chyba při rezervaci místa</div>
+  </div>
+
+  <!-- Detaily jízdy -->
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title" th:text="'Jízda z ' + ${ride.startLocation} + ' do ' + ${ride.destination}"></h3>
+      <p class="card-text">
+        <strong>Řidič: </strong>
+        <a th:href="@{/profiles/{id}(id=${ride.driver.id})}"
+           th:text="${ride.driver.getFirstName() + ' ' + ride.driver.getLastName()}"></a>
+      </p>
+      <p class="card-text">
+        <strong>Datum a čas odjezdu: </strong>
+        <span th:text="${ride.formattedDepartureTime}"></span>
+      </p>
+      <p class="card-text">
+        <strong>Cena za osobu: </strong>
+        <span th:text="${ride.pricePerSeat} + ' Kč'"></span>
+      </p>
+      <p class="card-text">
+        <strong>Počet volných míst: </strong>
+        <span th:text="${ride.availableSeats}"></span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Tlačítko pro rezervaci -->
+  <div class="mt-4">
+    <form th:action="@{'/rides/book/' + ${ride.id}}" method="post">
+      <button type="submit" class="btn btn-primary">Zarezervovat jízdu</button>
+    </form>
+  </div>
+
+  <!-- Odkaz zpět na seznam jízd -->
+  <div class="mt-3">
+    <a th:href="@{/}" class="btn btn-outline-primary">Zpět na seznam jízd</a>
+  </div>
+
+  <div class="mt-3" th:if="${isDriver}">
+    <a th:href="@{'/rides/' + ${ride.id} + '/passengers'}" class="btn btn-outline-secondary">Zobrazit pasažéry</a>
+  </div>
+
+
+</div>
+<div th:replace="fragments/scripty"></div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

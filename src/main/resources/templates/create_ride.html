@@ -31,6 +31,11 @@
             <label class="form-label">Volné místa</label>
             <input type="number" class="form-control" th:field="*{availableSeats}" required />
         </div>
+        <div class="mb-3">
+            <label for="requiresApproval" class="form-label">Potvrzovat cestující?</label>
+            <input type="checkbox" id="requiresApproval" class="form-check-input" th:field="*{requiresApproval}" />
+        </div>
+
         <button type="submit" class="btn btn-primary">Vytvořit</button>
     </form>
 </div>

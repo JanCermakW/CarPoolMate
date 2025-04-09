@@ -13,9 +13,9 @@
         <div class="col-12 text-left mb-2">
             <h1>List všech uživatelů</h1>
         </div>
-        <div class="col-2">
-            <a th:href="@{/registration}" class="btn btn-primary btn-sm mb-3 p-2 fw-bold">Zaregistrovat uživatele</a>
-        </div>
+    </div>
+    <div th:if="${param.success}">
+        <div class="alert alert-success">Uživatel úspěšně odstraněn</div>
     </div>
     <div class="card">
         <div class="card-body">
@@ -27,6 +27,7 @@
                             <th scope="col">Jméno</th>
                             <th scope="col">Příjmení</th>
                             <th scope="col">Email</th>
+                            <th scope="col">Role</th>
                             <th scope="col">Akce</th>
                         </tr>
                     </thead>
@@ -36,9 +37,13 @@
                             <td th:text="${user.firstName}"></td>
                             <td th:text="${user.lastName}"></td>
                             <td th:text="${user.email}"></td>
+                            <td th:text="${user.getRole().getName()}"></td>
                             <td>
                                 <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-primary mb-1">Upravit</a>
-                                <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="btn btn-danger mb-1">Smazat</a>
+                                <a th:if="${user.email != currentUser.email}"
+                                   th:href="@{/admin/users/delete/{id}(id=${user.id})}"
+                                   class="btn btn-danger mb-1">Smazat</a>
+
                             </td>
                         </tr>
                     </tbody>

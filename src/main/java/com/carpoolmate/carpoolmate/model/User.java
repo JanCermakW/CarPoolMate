@@ -28,8 +28,11 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    private boolean isDriverVerified = false;  // True when an admin approves the driver
     private String idPhotoPath;  // Path to the uploaded ID card image
+
+    private String carType;
+    private String licensePlate;
+
 
     @Column(name = "verification_code")
     private String verificationCode;
@@ -74,7 +77,7 @@ public class User {
         this.penalties = penalties;
     }
 
-    public User(Long id, String email, String password, String firstName, String lastName, String phoneNumber, Role role, boolean isDriverVerified, String idPhotoPath, String verificationCode, boolean enabled, List<Review> receivedReviews, List<Penalty> penalties) {
+    public User(Long id, String email, String password, String firstName, String lastName, String phoneNumber, Role role, String idPhotoPath, String verificationCode, boolean enabled, List<Review> receivedReviews, List<Penalty> penalties) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -82,7 +85,6 @@ public class User {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.role = role;
-        this.isDriverVerified = isDriverVerified;
         this.idPhotoPath = idPhotoPath;
         this.verificationCode = verificationCode;
         this.enabled = enabled;
@@ -173,14 +175,6 @@ public class User {
         this.role = role;
     }
 
-    public boolean isDriverVerified() {
-        return isDriverVerified;
-    }
-
-    public void setDriverVerified(boolean driverVerified) {
-        isDriverVerified = driverVerified;
-    }
-
     public String getIdPhotoPath() {
         return idPhotoPath;
     }
@@ -195,6 +189,22 @@ public class User {
 
     public void setReceivedReviews(List<Review> receivedReviews) {
         this.receivedReviews = receivedReviews;
+    }
+
+    public String getCarType() {
+        return carType;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 }
 

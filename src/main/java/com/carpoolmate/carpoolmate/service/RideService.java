@@ -1,6 +1,7 @@
 package com.carpoolmate.carpoolmate.service;
 
 import com.carpoolmate.carpoolmate.model.Ride;
+import com.carpoolmate.carpoolmate.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,4 +20,9 @@ public interface RideService {
 
     public List<String> getLocationSuggestions(String query, String field);
 
+    public Ride getRideById(Long id);
+
+    public void bookRide(Long rideId);
+    public List<User> getPassengersForRide(Long rideId);
+    User getCurrentUser();
 }

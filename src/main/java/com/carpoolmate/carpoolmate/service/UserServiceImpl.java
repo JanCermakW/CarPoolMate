@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     public UserServiceImpl(UserRepository userRepository) {
         super();
         this.userRepository = userRepository;
@@ -57,6 +60,26 @@ public class UserServiceImpl implements UserService{
         user.setEnabled(false);
 
         return userRepository.save(user);
+    }
+
+    public User saveDriver(UserRegistrationDto registrationDto) {
+        // Logika pro uložení řidiče, včetně nastavení specifických informací
+        User driver = new User();
+        driver.setFirstName(registrationDto.getFirstName());
+        driver.setLastName(registrationDto.getLastName());
+        driver.setEmail(registrationDto.getEmail());
+        driver.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        driver.setCarType(registrationDto.getCarType());
+        driver.setLicensePlate(registrationDto.getLicensePlate());
+        driver.setIdPhotoPath(registrationDto.getDriverImagePath());
+        driver.setRole(roleRepository.findByName(RoleType.ROLE_USER));
+
+        String randomCode = PasswordGenerator.generateRandomPassword(64);
+        driver.setVerificationCode(randomCode);
+        driver.setEnabled(false);
+
+        // Uložení řidiče do databáze
+        return userRepository.save(driver);
     }
 
     @Override
@@ -206,5 +229,43 @@ public class UserServiceImpl implements UserService{
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
+
+    @Override
+    public List<User> getPendingDrivers() {
+        // Pass the Role entity instead of RoleType to the query
+        return userRepository.findPendingDrivers(roleRepository.findByName(RoleType.ROLE_DRIVER));
+
+    }
+
+
+    @Override
+    public void approveDriver(Long driverId) {
+        // Najít uživatele podle ID
+        User driver = getUserById(driverId);
+        System.out.println("Driver found: " + driver);
+
+
+        // Načíst roli řidiče
+        Role driverRole = roleRepository.findByName(RoleType.ROLE_DRIVER);
+        if (driverRole == null) {
+            throw new IllegalStateException("ROLE_DRIVER není definováno v databázi");
+        }
+
+        // Nastavit roli řidiče
+        driver.setRole(driverRole);
+
+        // Uložit aktualizovaný záznam uživatele
+        userRepository.save(driver);
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("User with ID " + id + " does not exist.");
+        }
+        userRepository.deleteById(id);
+    }
+
+
 }
 
