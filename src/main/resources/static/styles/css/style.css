@@ -139,4 +139,33 @@ a:hover {
   color: #fff !important;
 }
 
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff !important;
+  background-color: #6435f0;
+}
+
+.nav-link {
+  color: #6435f0 !important;
+}
+
+#userMenu li {
+  width: 100%;
+}
+#userMenu li button {
+  width: 100%;
+}
+
+.bg-primary {
+  background-color: #6435f0 !important;
+}
+
+.badge-count {
+  background: #35f0c5;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 14px;
+  color: white;
+  margin-left: 4px;
+}
+
 /*# sourceMappingURL=style.css.map */

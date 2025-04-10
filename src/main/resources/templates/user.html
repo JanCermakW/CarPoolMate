@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Můj účet | CarPoolMate</title>
@@ -19,41 +19,43 @@
                             <i th:unless="${not #strings.isEmpty(user.profilePicturePath)}"
                                class="fa-solid fa-user"
                                style="font-size: 50px;"></i>
-                            <div class="mt-3">
+                            <div class="my-3">
                                 <h4 th:text="${user.firstName} + ' ' + ${user.lastName}"></h4>
-                                <p class="text-secondary mb-1">TODO Realitní makléř</p>
-                                <p class="text-muted font-size-sm">TODO Pardubice a okolí</p>
-                                <button class="btn btn-primary">TODO Sledovat</button>
-                                <button class="btn btn-outline-primary">TODO Poslat zprávu</button>
                             </div>
                         </div>
-                        <hr class="my-4">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
-                                <span class="text-secondary">https://RealBoss.com</span>
+                        <ul class="nav nav-pills flex-column justify-content-center align-items-center" id="userMenu" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">
+                                    Profil
+                                </button>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github me-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>Github</h6>
-                                <span class="text-secondary">RealBoss</span>
+                            <li sec:authorize="hasRole('DRIVER')" class="nav-item" role="presentation">
+                                <button class="nav-link" id="driver-tab" data-bs-toggle="pill" data-bs-target="#driver" type="button" role="tab" aria-controls="driver" aria-selected="false">
+                                    Profil řidiče
+                                </button>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter me-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>Twitter</h6>
-                                <span class="text-secondary">@RealBoss</span>
+                            <li sec:authorize="hasRole('DRIVER')" class="nav-item" role="presentation">
+                                <button class="nav-link" id="myRides-tab" data-bs-toggle="pill" data-bs-target="#myRides" type="button" role="tab" aria-controls="myRides" aria-selected="false">
+                                    Nabízené jízdy
+                                    <span class="badge-count" th:unless="${#lists.isEmpty(driversRides)}" th:text="${driversRides.size()}"></span>
+                                    <span class="badge-count" th:if="${#lists.isEmpty(driversRides)}" th:text="0"></span>
+                                </button>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram me-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                                <span class="text-secondary">RealBoss</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook me-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-                                <span class="text-secondary">RealBoss</span>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reservedRides-tab" data-bs-toggle="pill" data-bs-target="#reservedRides" type="button" role="tab" aria-controls="reservedRides" aria-selected="false">
+                                    Rezervované jízdy
+                                    <span class="badge-count" th:unless="${#lists.isEmpty(rides)}" th:text="${rides.size()}"></span>
+                                    <span class="badge-count" th:if="${#lists.isEmpty(rides)}" th:text="0"></span>
+                                </button>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-8">
+                <div class="tab-content" id="userContent">
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="card">
                     <div class="card-body">
                         <div th:if="${param.success}">
@@ -92,7 +94,7 @@
                                 <label class="control-label" for="phone">
                                     Telefon
                                 </label>
-                                <input id="phone" class="form-control" th:field="*{phone}" required autofocus="autofocus">
+                                <input id="phone" class="form-control" th:field="*{phoneNumber}" required autofocus="autofocus">
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="city">
@@ -142,6 +144,124 @@
                             </div>
                         </form>
                     </div>
+                </div>
+                </div>
+                    <div class="tab-pane fade" id="driver" role="tabpanel" aria-labelledby="driver-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <div th:if="${param.success}">
+                                    <div class="alert alert-info">
+                                        úspěšně jste se upravili uživatele!
+                                    </div>
+                                </div>
+
+                                <div th:if="${param.errorPasswd}">
+                                    <div class="alert alert-danger">
+                                        Heslo musí mít minimálně 8 znaků a jedno velké písmeno!
+                                    </div>
+                                </div>
+
+                                <h2>Řidičské údaje</h2>
+                                <form th:action="@{/driver}" method="post" th:object="${user}">
+                                    <div class="form-group">
+                                        <label class="control-label" for="firstName">
+                                            Typ vozidla
+                                        </label>
+                                        <input id="carType" class="form-control" th:field="*{carType}" required autofocus="autofocus">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="lastName">
+                                            SPZ
+                                        </label>
+                                        <input id="licensePlate" class="form-control" th:field="*{licensePlate}" required autofocus="autofocus">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary mt-2">Upravit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- moje nabízené jízdy -->
+                    <div class="tab-pane fade" id="myRides" role="tabpanel" aria-labelledby="myRides-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2>Moje nabízené jízdy</h2>
+
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Start</th>
+                                        <th>Cíl</th>
+                                        <th>Datum a čas</th>
+                                        <th>Cena za osobu</th>
+                                        <th>Akce</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="driversRide, iterStat : ${driversRides}">
+                                        <td th:text="${iterStat.count}"></td>
+                                        <td th:text="${driversRide.startLocation}"></td>
+                                        <td th:text="${driversRide.destination}"></td>
+                                        <td th:text="${driversRide.formattedDepartureTime}"></td>
+                                        <td th:text="${driversRide.pricePerSeat + ' Kč'}"></td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/rides/' + ${driversRide.id}}">Zobrazit
+                                            </a>
+                                            <form th:action="@{/ride/cancel}" method="post" class="d-inline">
+                                                <input type="hidden" name="rideId" th:value="${driversRide.id}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Zrušit</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- moje rezervované jízdy -->
+                    <div class="tab-pane fade" id="reservedRides" role="tabpanel" aria-labelledby="reservedRides-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2>Moje rezervované jízdy</h2>
+
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Start</th>
+                                        <th>Cíl</th>
+                                        <th>Datum a čas</th>
+                                        <th>Cena za osobu</th>
+                                        <th>Akce</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="ride, iterStat : ${rides}">
+                                        <td th:text="${iterStat.count}"></td>
+                                        <td th:text="${ride.startLocation}"></td>
+                                        <td th:text="${ride.destination}"></td>
+                                        <td th:text="${ride.formattedDepartureTime}"></td>
+                                        <td th:text="${ride.pricePerSeat + ' Kč'}"></td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{'/rides/' + ${ride.id}}">Zobrazit
+                                            </a>
+                                            <form th:action="@{/ride/cancel}" method="post" class="d-inline">
+                                                <input type="hidden" name="rideId" th:value="${ride.id}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Zrušit</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

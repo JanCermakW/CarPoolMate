@@ -115,5 +115,15 @@ public class RideServiceImpl implements RideService{
         }
     }
 
+    @Override
+    public List<Ride> getRidesByUser(User user) {
+        return rideRepository.findByPassengersContaining(user);
+    }
+
+    @Override
+    public List<Ride> getRidesByDriver(User user) {
+        return rideRepository.findByDriverId(user.getId());
+    }
+
 
 }

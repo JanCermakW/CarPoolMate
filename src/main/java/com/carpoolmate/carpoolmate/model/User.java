@@ -30,6 +30,14 @@ public class User {
 
     private String idPhotoPath;  // Path to the uploaded ID card image
 
+    private String profilePicturePath;
+
+    private String city;
+
+    private String street;
+
+    private Long postNum;
+
     private String carType;
     private String licensePlate;
 
@@ -205,6 +213,38 @@ public class User {
 
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
+    }
+
+    public String getProfilePicturePath() {
+        return profilePicturePath;
+    }
+
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public Long getPostNum() {
+        return postNum;
+    }
+
+    public void setPostNum(Long postNum) {
+        this.postNum = postNum;
     }
 }
 

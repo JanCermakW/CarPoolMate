@@ -25,4 +25,8 @@ public interface RideService {
     public void bookRide(Long rideId);
     public List<User> getPassengersForRide(Long rideId);
     User getCurrentUser();
+
+    List<Ride> getRidesByUser(User user);
+
+    List<Ride> getRidesByDriver(User user);
 }

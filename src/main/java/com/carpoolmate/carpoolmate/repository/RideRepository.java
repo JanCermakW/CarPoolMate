@@ -43,4 +43,6 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     List<String> findDistinctDestinations(@Param("query") String query);
 
     Ride getRideById(Long id);
+
+    List<Ride> findByPassengersContaining(User user);
 }
