@@ -7,79 +7,196 @@
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
-
-<div class="container mt-5">
-    <h1 class="mb-4">Najít jízdu</h1>
-
-    <div th:if="${param.successRideCreate}" id="Message">
-        <div class="alert alert-success">Úspěšně vytvořena jízda</div>
-    </div>
-
-
-    <!-- Tlačítko pro rozbalení filtrace -->
-    <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterForm"
-            aria-expanded="false" aria-controls="filterForm">
-        <i class="fas fa-filter"></i> Filtrace
-    </button>
-
-
-    <!-- Schovaný form pro filtraci -->
-    <div class="collapse" id="filterForm">
-        <form class="row g-3 mb-4" th:action="@{/rides/filter}" method="get">
-            <div class="col-md-3 position-relative">
-                <input type="text" id="startLocation" name="startLocation" class="form-control" placeholder="Odkud" th:value="${startLocation}" autocomplete="off">
-                <ul id="startLocationSuggestions" class="list-group mt-2" style="display:none;"></ul>
+<section id="uvod">
+    <div class="container pt-5 pb-5">
+        <div class="row rg-30">
+            <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h1 class="mb-4">Cestujte chytřeji s CarPoolMate</h1>
+                <p class="mb-4">Najděte spolucestující nebo nabídněte volná místa ve svém autě. Ušetřete peníze, chraňte přírodu a poznejte zajímavé lidi.</p>
+                <div class="d-flex gap-10">
+                    <a href="/rides/filter" class="btn btn-secondary"><i class="fa-solid fa-magnifying-glass me-2"></i>Hledat jízdu</a><a href="" class="btn btn-white"><i class="fa-solid fa-car-side me-2"></i>Nabídnout jízdu</a>
+                </div>
             </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-lg">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mt-2 mb-4">Vyhledat jízdu</h2>
+                        <form class="row g-3" th:action="@{/rides/filter}" method="get">
+                            <div class="col-12 position-relative">
+                                <div class="input-group">
+                                    <span class="input-group-text input-from">
+                                        <i class="fa-solid fa-map-pin"></i>
+                                    </span>
+                                    <input type="text" id="startLocation" name="startLocation" class="form-control"
+                                           placeholder="Odkud" th:value="${startLocation}" autocomplete="off">
+                                </div>
+                                <ul id="startLocationSuggestions" class="list-group mt-2" style="display:none;"></ul>
+                            </div>
 
-            <div class="col-md-3 position-relative">
-                <input type="text" id="destination" name="destination" class="form-control" placeholder="Kam" th:value="${destination}" autocomplete="off">
-                <ul id="destinationSuggestions" class="list-group mt-2" style="display:none;"></ul>
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="departureDate" th:value="${departureDate}" class="form-control">
-            </div>
-            <div class="col-md-2">
-                <input type="time" name="departureTime" th:value="${departureTime}" class="form-control" placeholder="Čas od">
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="maxPrice" th:value="${maxPrice}" class="form-control" placeholder="Max. cena">
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="minSeats" th:value="${minSeats}" class="form-control" placeholder="Min. místa">
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Vyhledat</button>
-            </div>
-        </form>
-    </div>
-
-
-    <!-- RIDE CARDS -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${rides != null}">
-        <div class="col" th:each="ride : ${rides}">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${ride.startLocation} + ' → ' + ${ride.destination}"></h5>
-                    <p class="card-text">
-                        <strong>Datum:</strong> <span th:text="${ride.formattedDepartureTime}"></span><br>
-                        <strong>Cena za sedadlo:</strong> <span th:text="${ride.pricePerSeat} + ' Kč'"></span><br>
-                        <strong>Volná místa:</strong> <span th:text="${ride.availableSeats}"></span><br>
-                        <strong>Řidič:</strong>
-                        <a th:href="@{/profiles/{id}(id=${ride.driver.id})}"
-                           th:text="${ride.driver.getFirstName() + ' ' + ride.driver.getLastName()}"></a>
-
-                    </p>
-                    <a th:href="@{'/rides/' + ${ride.id}}" class="btn btn-outline-primary">Zobrazit</a>
+                            <div class="col-12 position-relative">
+                                <div class="input-group">
+                                    <span class="input-group-text input-to">
+                                        <i class="fa-solid fa-map-pin"></i>
+                                    </span>
+                                    <input type="text" id="destination" name="destination" class="form-control" placeholder="Kam" th:value="${destination}" autocomplete="off">
+                                </div>
+                                <ul id="destinationSuggestions" class="list-group mt-2" style="display:none;"></ul>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="date" name="departureDate" th:value="${departureDate}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="time" name="departureTime" th:value="${departureTime}" class="form-control" placeholder="Čas od">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-money-bill"></i>
+                                    </span>
+                                    <input type="number" name="maxPrice" th:value="${maxPrice}" class="form-control" placeholder="Max cena">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-users"></i>
+                                    </span>
+                                    <input type="number" name="minSeats" th:value="${minSeats}" class="form-control" placeholder="Počet míst">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-secondary w-100 mt-3"><i class="fas fa-search"></i> Vyhledat</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- No rides found -->
-    <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
-        Žádné jízdy nebyly nalezeny pro zadané parametry.
+</section>
+<section id="funguje">
+    <div class="container pt-5 pb-5">
+        <h2 class="text-center mb-5">Jak to funguje</h2>
+        <div class="row rg-30">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <div class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="icon-circle mt-2"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        <h3 class="mt-4">Vyhledejte jízdu</h3>
+                        <p>Zadejte místo odjezdu, příjezdu a datum. Prozkoumejte dostupné jízdy a vyberte tu, která vám nejvíce vyhovuje.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <div class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="icon-circle mt-2"><i class="fa-solid fa-calendar"></i></div>
+                        <h3 class="mt-4">Rezervujte si místo</h3>
+                        <p>Vyberte počet míst, které potřebujete, a rezervujte si je. Komunikujte s řidičem ohledně detailů cesty.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <div class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="icon-circle mt-2"><i class="fa-solid fa-car-side"></i></div>
+                        <h3 class="mt-4">Cestujte společně</h3>
+                        <p>Setkejte se s řidičem na domluveném místě a užijte si jízdu. Po příjezdu nezapomeňte nechat hodnocení.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+<section id="popular">
+    <div class="container pt-5 pb-5">
+        <h2 class="text-center mb-5">Populární trasy</h2>
+        <div class="row rg-30">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <a th:href="@{/rides/filter?startLocation=Brno&destination=Praha&departureDate=&departureTime=&maxPrice=&minSeats=}" class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center text-decoration-none">
+                        <div class="img-fluid">
+                            <img src="/img/praha.jpg" alt="Praha" width="100%" height="150px">
+                        </div>
+                        <div style="margin-top:150px" class="d-flex gap-10">
+                            <h3><i class="fa-solid fa-map-pin me-2 text-primary"></i>Brno</h3>
+                            <h3><i class="fa-solid fa-arrow-right"></i></h3>
+                            <h3><i class="fa-solid fa-map-pin me-2 text-secondary"></i>Praha</h3>
+                        </div>
+                        <span class="btn btn-primary w-100 mt-4">Zobrazit</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <a th:href="@{/rides/filter?startLocation=Pardubice&destination=Brno&departureDate=&departureTime=&maxPrice=&minSeats=}" class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center text-decoration-none">
+                        <div class="img-fluid">
+                            <img src="/img/brno.jpg" alt="brno" width="100%" height="150px">
+                        </div>
+                        <div style="margin-top:150px" class="d-flex gap-10">
+                            <h3><i class="fa-solid fa-map-pin me-2 text-primary"></i>Pardubice</h3>
+                            <h3><i class="fa-solid fa-arrow-right"></i></h3>
+                            <h3><i class="fa-solid fa-map-pin me-2 text-secondary"></i>Brno</h3>
+                        </div>
+                        <span class="btn btn-primary w-100 mt-4">Zobrazit</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <a th:href="@{/rides/filter?startLocation=Praha&destination=Pardubice&departureDate=&departureTime=&maxPrice=&minSeats=}" class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center text-decoration-none">
+                        <div class="img-fluid">
+                            <img src="/img/pardubice.jpg" alt="pce" width="100%" height="150px">
+                        </div>
+                        <div style="margin-top:150px" class="d-flex gap-10">
+                            <h3><i class="fa-solid fa-map-pin me-2 text-primary"></i>Praha</h3>
+                            <h3><i class="fa-solid fa-arrow-right"></i></h3>
+                            <h3><i class="fa-solid fa-map-pin me-2 text-secondary"></i>Pardubice</h3>
+                        </div>
+                        <span class="btn btn-primary w-100 mt-4">Zobrazit</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <a th:href="@{/rides/filter}" class="btn btn-primary">Zobrazit všechny trasy</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="proc">
+    <div class="container pt-5 pb-5">
+        <h2 class="text-center mb-5">Proč využít CarPoolMate</h2>
+        <div class="row rg-30">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <div class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="icon-circle mt-2"><i class="fa-solid fa-dollar-sign"></i></div>
+                        <h3 class="mt-4">Šetřete peníze</h3>
+                        <p>Sdílením nákladů na cestu můžete ušetřit až 50 % oproti individuální dopravě. Čím více cestujících, tím nižší náklady.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <div class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="icon-circle mt-2"><i class="fa-solid fa-bell"></i></div>
+                        <h3 class="mt-4">Chraňte životní prostředí</h3>
+                        <p>Sdílením jízdy snižujete emise CO2 a přispíváte k ochraně životního prostředí. Méně aut na silnicích znamená čistší vzduch.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-md hover-effect">
+                    <div class="card-body p-3 text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="icon-circle mt-2"><i class="fa-solid fa-heart"></i></div>
+                        <h3 class="mt-4">Poznávejte lidi</h3>
+                        <p>Spolujízda je skvělý způsob, jak potkat nové lidi s podobnými zájmy. Mnoho uživatelů nachází během jízd nová přátelství.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <div th:replace="fragments/scripty"></div>
 <div th:replace="fragments/footer :: footer"></div>
 </body>

@@ -74,7 +74,7 @@ public class RideController {
         model.addAttribute("minSeats", minSeats);
 
 
-        return "index";
+        return "rides";
     }
 
     @GetMapping("/rides/create")

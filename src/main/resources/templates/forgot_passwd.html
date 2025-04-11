@@ -12,7 +12,7 @@
     <div class="row mt-5 mx-1">
         <div class="col-md-6 offset-md-3">
             <div class="card p-5">
-                <h1>Zapomenuté heslo</h1>
+                <h1 class="text-center mb-4">Zapomenuté heslo</h1>
                 <form th:action="@{/forgotPasswd}" method="post" th:object="${user}">
                     <!-- error message -->
                     <div th:if="${param.error}">
@@ -27,12 +27,12 @@
                     <div class="form-group form-floating">
                         <input id="email" class="form-control" type="text" name="email" th:field="*{email}" required placeholder="Zadejte email" autofocus="autofocus">
                         <label class="control-label" for="email">
-                            Email
+                            <i class="fa-solid fa-envelope me-2"></i>Email
                         </label>
                     </div>
 
                     <div class="form-group mt-4 d-flex justify-content-center align-items-start flex-column">
-                        <button type="submit" class="btn btn-primary">Odeslat</button><br>
+                        <button type="submit" class="btn btn-primary w-100">Odeslat</button><br>
                         <span>Chcete se přihlásit ? <a href="/" th:href="@{/}">Zpět domů</a> </span>
                     </div>
 
