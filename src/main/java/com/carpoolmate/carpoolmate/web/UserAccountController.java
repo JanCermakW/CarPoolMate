@@ -106,6 +106,10 @@ public class UserAccountController {
         currentUser.setCarType(driver.getCarType());
         currentUser.setLicensePlate(driver.getLicensePlate());
 
+        if (driver.getIdPhotoPath() != null) {
+            currentUser.setIdPhotoPath("/img/" + driver.getIdPhotoPath());
+        }
+
         userService.updateUser(currentUser);
         return "redirect:/user?success";
     }

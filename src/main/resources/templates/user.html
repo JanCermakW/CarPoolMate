@@ -29,7 +29,7 @@
                                     Profil
                                 </button>
                             </li>
-                            <li sec:authorize="hasRole('DRIVER')" class="nav-item" role="presentation">
+                            <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="driver-tab" data-bs-toggle="pill" data-bs-target="#driver" type="button" role="tab" aria-controls="driver" aria-selected="false">
                                     Profil řidiče
                                 </button>
@@ -72,53 +72,41 @@
 
                         <h2>Uživatelské údaje</h2>
                         <form th:action="@{/user}" method="post" th:object="${user}">
-                            <div class="form-group">
-                                <label class="control-label" for="firstName">
-                                    Jméno
-                                </label>
-                                <input id="firstName" class="form-control" th:field="*{firstName}" required autofocus="autofocus">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="lastName">
-                                    Příjmení
-                                </label>
-                                <input id="lastName" class="form-control" th:field="*{lastName}" required autofocus="autofocus">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="email">
-                                    Email
-                                </label>
-                                <input id="email" class="form-control" th:field="*{email}" required autofocus="autofocus">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="phone">
-                                    Telefon
-                                </label>
-                                <input id="phone" class="form-control" th:field="*{phoneNumber}" required autofocus="autofocus">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="city">
-                                    Město
-                                </label>
-                                <input id="city" class="form-control" th:field="*{city}" required autofocus="autofocus">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="street">
-                                    Ulice
-                                </label>
-                                <input id="street" class="form-control" th:field="*{street}" required autofocus="autofocus">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="postnum">
-                                    PSČ
-                                </label>
-                                <input id="postnum" class="form-control" th:field="*{postNum}" required autofocus="autofocus">
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary mt-2">Upravit</button>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">Jméno</label>
+                                    <input id="firstName" class="form-control" th:field="*{firstName}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Příjmení</label>
+                                    <input id="lastName" class="form-control" th:field="*{lastName}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input id="email" class="form-control" th:field="*{email}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Telefon</label>
+                                    <input id="phone" class="form-control" th:field="*{phoneNumber}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="city" class="form-label">Město</label>
+                                    <input id="city" class="form-control" th:field="*{city}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="street" class="form-label">Ulice</label>
+                                    <input id="street" class="form-control" th:field="*{street}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="postnum" class="form-label">PSČ</label>
+                                    <input id="postnum" class="form-control" th:field="*{postNum}" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary mt-2">Upravit</button>
+                                </div>
                             </div>
                         </form>
+
                         <br>
                         <form th:action="@{/user/upload}" method="post" enctype="multipart/form-data">
                             <h3 class="mb-3">Změnit profilový obrázek</h3>
@@ -163,6 +151,20 @@
 
                                 <h2>Řidičské údaje</h2>
                                 <form th:action="@{/driver}" method="post" th:object="${user}">
+                                    <div th:if="${#strings.isEmpty(user.getIdPhotoPath())}">
+                                        <p>
+                                            Pokud se chcete stát řidičem, nahrajte řidičský průkaz, vyplňte informace o autě a vyčkejte na ověření.
+                                        </p>
+                                    </div>
+                                    <div th:if="${not #strings.isEmpty(user.getIdPhotoPath()) and user.role.getName() != 'ROLE_DRIVER'}">
+                                        <p class="alert alert-danger">
+                                            Váš profil ještě není ověřený jako řidičský!
+                                        </p>
+                                    </div>
+                                    <div th:if="${#strings.isEmpty(user.getIdPhotoPath())}" class="form-group mt-2">
+                                        <label for="idPhotoPath" class="form-label"><i class="fa-solid fa-id-card me-2"></i>Nahrát řidíčský průkaz</label>
+                                        <input id="idPhotoPath" class="form-control" type="file" name="idPhotoPath">
+                                    </div>
                                     <div class="form-group">
                                         <label class="control-label" for="firstName">
                                             Typ vozidla
@@ -188,37 +190,66 @@
                     <div class="tab-pane fade" id="myRides" role="tabpanel" aria-labelledby="myRides-tab">
                         <div class="card">
                             <div class="card-body">
-                                <h2>Moje nabízené jízdy</h2>
+                                <h2 class="mb-4">Moje nabízené jízdy</h2>
 
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Start</th>
-                                        <th>Cíl</th>
-                                        <th>Datum a čas</th>
-                                        <th>Cena za osobu</th>
-                                        <th>Akce</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="driversRide, iterStat : ${driversRides}">
-                                        <td th:text="${iterStat.count}"></td>
-                                        <td th:text="${driversRide.startLocation}"></td>
-                                        <td th:text="${driversRide.destination}"></td>
-                                        <td th:text="${driversRide.formattedDepartureTime}"></td>
-                                        <td th:text="${driversRide.pricePerSeat + ' Kč'}"></td>
-                                        <td>
-                                            <a class="btn btn-primary btn-sm" th:href="@{'/rides/' + ${driversRide.id}}">Zobrazit
-                                            </a>
-                                            <form th:action="@{/ride/cancel}" method="post" class="d-inline">
-                                                <input type="hidden" name="rideId" th:value="${driversRide.id}">
-                                                <button type="submit" class="btn btn-danger btn-sm">Zrušit</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <!-- RIDE CARDS -->
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4" th:if="${driversRides != null}">
+                                    <div class="col" th:each="driversRide : ${driversRides}">
+                                        <div class="card h-100 shadow-md ride-card">
+                                            <div class="card-body">
+                                                <div class="bg-primary">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h5 class="card-title" th:text="${driversRide.startLocation}"></h5>
+                                                            <h5><i class="fa-solid fa-arrow-down text-secondary"></i></h5>
+                                                            <h5 class="card-title" th:text="${driversRide.destination}"></h5>
+                                                        </div>
+                                                        <div class="col-6 d-flex align-items-center justify-content-end">
+                                                            <h5 class="perseat"><span th:text="${#numbers.formatDecimal(driversRide.pricePerSeat, 0, 0)} + ' Kč'"></span><span class="text-small">za osobu</span></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div class="card-text">
+                                                        <div><i class="fa-solid fa-calendar me-2 text-secondary"></i><span th:text="${driversRide.formattedDepartureTime}"></span></div>
+                                                        <div><i class="fa-solid fa-car-side me-2 text-secondary"></i><span th:text="${driversRide.driver.getCarType()}"></span></div>
+                                                        <div><i class="fa-solid fa-users me-2 text-secondary"></i><span th:text="${driversRide.availableSeats}"></span></div>
+                                                        <div class="d-flex gap-3 align-items-center">
+                                                            <!-- Profile Picture -->
+                                                            <img th:if="${not #strings.isEmpty(driversRide.driver.profilePicturePath)}"
+                                                                 th:src="${driversRide.driver.getProfilePicturePath()}"
+                                                                 alt="ProfilePic"
+                                                                 class="rounded-circle"
+                                                                 width="50px" height="50px">
+
+                                                            <!-- Initials Fallback -->
+                                                            <div th:if="${#strings.isEmpty(driversRide.driver.profilePicturePath)}"
+                                                                 class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                                                                 style="width: 50px; height: 50px; font-weight: bold;">
+                                                                <span class="text-primary" th:text="${driversRide.driver.getFirstName().substring(0,1) + driversRide.driver.getLastName().substring(0,1)}"></span>
+                                                            </div>
+
+                                                            <!-- Driver Name and Role -->
+                                                            <div class="d-flex flex-column">
+                                                                <a th:href="@{/profiles/{id}(id=${driversRide.driver.id})}"
+                                                                   th:text="${driversRide.driver.getFirstName() + ' ' + driversRide.driver.getLastName()}"></a>
+                                                                <span class="text-muted text-small">Řidič</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <form th:action="@{'/rides/delete/' + ${driversRide.id}}" method="post">
+                                                        <button type="submit" class="btn btn-danger mt-4 w-100 fw-600">Zrušit jízdu</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- No rides found -->
+                                <div th:if="${driversRides != null and #lists.isEmpty(driversRides)}" class="alert alert-warning mt-4">
+                                    Žádné jízdy nebyly nalezeny pro zadané parametry.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -227,37 +258,66 @@
                     <div class="tab-pane fade" id="reservedRides" role="tabpanel" aria-labelledby="reservedRides-tab">
                         <div class="card">
                             <div class="card-body">
-                                <h2>Moje rezervované jízdy</h2>
+                                <h2 class="mb-4">Moje rezervované jízdy</h2>
 
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Start</th>
-                                        <th>Cíl</th>
-                                        <th>Datum a čas</th>
-                                        <th>Cena za osobu</th>
-                                        <th>Akce</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="ride, iterStat : ${rides}">
-                                        <td th:text="${iterStat.count}"></td>
-                                        <td th:text="${ride.startLocation}"></td>
-                                        <td th:text="${ride.destination}"></td>
-                                        <td th:text="${ride.formattedDepartureTime}"></td>
-                                        <td th:text="${ride.pricePerSeat + ' Kč'}"></td>
-                                        <td>
-                                            <a class="btn btn-primary btn-sm" th:href="@{'/rides/' + ${ride.id}}">Zobrazit
-                                            </a>
-                                            <form th:action="@{/ride/cancel}" method="post" class="d-inline">
-                                                <input type="hidden" name="rideId" th:value="${ride.id}">
-                                                <button type="submit" class="btn btn-danger btn-sm">Zrušit</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <!-- RIDE CARDS -->
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4" th:if="${rides != null}">
+                                    <div class="col" th:each="ride : ${rides}">
+                                        <div class="card h-100 shadow-md ride-card">
+                                            <div class="card-body">
+                                                <div class="bg-primary">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h5 class="card-title" th:text="${ride.startLocation}"></h5>
+                                                            <h5><i class="fa-solid fa-arrow-down text-secondary"></i></h5>
+                                                            <h5 class="card-title" th:text="${ride.destination}"></h5>
+                                                        </div>
+                                                        <div class="col-6 d-flex align-items-center justify-content-end">
+                                                            <h5 class="perseat"><span th:text="${#numbers.formatDecimal(ride.pricePerSeat, 0, 0)} + ' Kč'"></span><span class="text-small">za osobu</span></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div class="card-text">
+                                                        <div><i class="fa-solid fa-calendar me-2 text-secondary"></i><span th:text="${ride.formattedDepartureTime}"></span></div>
+                                                        <div><i class="fa-solid fa-car-side me-2 text-secondary"></i><span th:text="${ride.driver.getCarType()}"></span></div>
+                                                        <div><i class="fa-solid fa-users me-2 text-secondary"></i><span th:text="${ride.availableSeats}"></span></div>
+                                                        <div class="d-flex gap-3 align-items-center">
+                                                            <!-- Profile Picture -->
+                                                            <img th:if="${not #strings.isEmpty(ride.driver.profilePicturePath)}"
+                                                                 th:src="${ride.driver.getProfilePicturePath()}"
+                                                                 alt="ProfilePic"
+                                                                 class="rounded-circle"
+                                                                 width="50px" height="50px">
+
+                                                            <!-- Initials Fallback -->
+                                                            <div th:if="${#strings.isEmpty(ride.driver.profilePicturePath)}"
+                                                                 class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                                                                 style="width: 50px; height: 50px; font-weight: bold;">
+                                                                <span class="text-primary" th:text="${ride.driver.getFirstName().substring(0,1) + ride.driver.getLastName().substring(0,1)}"></span>
+                                                            </div>
+
+                                                            <!-- Driver Name and Role -->
+                                                            <div class="d-flex flex-column">
+                                                                <a th:href="@{/profiles/{id}(id=${ride.driver.id})}"
+                                                                   th:text="${ride.driver.getFirstName() + ' ' + ride.driver.getLastName()}"></a>
+                                                                <span class="text-muted text-small">Řidič</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <form th:action="@{'/rides/unreserve/' + ${ride.id}}" method="post">
+                                                        <button type="submit" class="btn btn-danger mt-4 w-100 fw-600">Zrušit rezervaci</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- No rides found -->
+                                <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
+                                    Žádné jízdy nebyly nalezeny pro zadané parametry.
+                                </div>
                             </div>
                         </div>
                     </div>

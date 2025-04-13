@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px !important;
+  margin-bottom: 120px !important;
 }
 
 .footer {
@@ -53,7 +53,7 @@ table {
   background-color: #fff;
   background-clip: border-box;
   border: 0 solid transparent;
-  border-radius: 0.25rem;
+  border-radius: 0.65rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 2px 6px 0 rgba(218, 218, 253, 0.65), 0 2px 6px 0 rgba(206, 206, 238, 0.54);
 }
@@ -320,8 +320,50 @@ a {
   border-radius: 50px;
 }
 
+.bg-grey {
+  background-color: #e4e8e7;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
 .ride-card {
   overflow: hidden;
+}
+.ride-card .card-body {
+  padding: 0;
+}
+.ride-card .card-body .bg-primary {
+  background-color: #0d6efd;
+  width: 100%;
+  position: relative;
+  top: 0;
+  padding: 20px;
+}
+.ride-card .card-body .bg-primary .card-title {
+  color: white;
+}
+.ride-card .card-body .bg-primary .perseat {
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+.ride-card .card-body .bg-primary .perseat .text-small {
+  font-size: 12px;
+}
+.ride-card .card-body .card-content {
+  padding: 20px;
+  padding-bottom: 0;
+}
+.ride-card .card-body .card-content .card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sticky-top {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /*# sourceMappingURL=style.css.map */

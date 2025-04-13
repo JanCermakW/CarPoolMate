@@ -99,7 +99,7 @@ public class RideController {
 
         // Uložíme jízdu
         rideService.createRide(ride);
-        return "redirect:/?successRideCreate";
+        return "redirect:/rides/filter?successRideCreate";
     }
 
     @GetMapping("/rides/{id}")
@@ -127,10 +127,10 @@ public class RideController {
     ) {
         try {
             rideService.bookRide(id); // Logika rezervace v RideService
-            return "redirect:/rides/{id}?success=reserved";
+            return "redirect:/rides/filter?success=reserved";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/rides/{id}?error=bookingFailed"; // Chyba při rezervaci
+            return "redirect:/rides/filter?error=bookingFailed"; // Chyba při rezervaci
         }
     }
 

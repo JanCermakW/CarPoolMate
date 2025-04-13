@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Vytvořit jízdu | CarPoolMate</title>
@@ -9,35 +9,79 @@
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container mt-5">
-    <h2>Vytvořit novou jízdu</h2>
-    <form th:action="@{/rides/create}" th:object="${ride}" method="post">
-        <div class="mb-3">
-            <label class="form-label">Začátek</label>
-            <input type="text" class="form-control" th:field="*{startLocation}" required />
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Destinace</label>
-            <input type="text" class="form-control" th:field="*{destination}" required />
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Čas a datum odjezdu</label>
-            <input type="datetime-local" class="form-control" th:field="*{departureTime}" required />
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Cena za místo</label>
-            <input type="number" class="form-control" th:field="*{pricePerSeat}" step="0.01" required />
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Volné místa</label>
-            <input type="number" class="form-control" th:field="*{availableSeats}" required />
-        </div>
-        <div class="mb-3">
-            <label for="requiresApproval" class="form-label">Potvrzovat cestující?</label>
-            <input type="checkbox" id="requiresApproval" class="form-check-input" th:field="*{requiresApproval}" />
-        </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-8">
+            <form th:action="@{/rides/create}" th:object="${ride}" method="post">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Vytvořit novou jízdu</h2>
+                        <p class="mb-4 text-muted">Vyplňte detaily jízdy, kterou chcete nabídnout</p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Místo odjezdu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-from">
+                                        <i class="fa-solid fa-map-pin"></i>
+                                    </span>
+                                    <input type="text" id="startLocation" name="startLocation" class="form-control"
+                                           placeholder="Např. Praha" th:value="${startLocation}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Místo příjezdu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-from">
+                                        <i class="fa-solid fa-map-pin text-secondary"></i>
+                                    </span>
+                                    <input type="text" id="destination" name="destination" class="form-control"
+                                           placeholder="Např. Brno" th:value="${destination}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Čas a datum odjezdu</label>
+                                <input type="datetime-local" class="form-control" th:field="*{departureTime}" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Cena za osobu (Kč)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-from">
+                                        <i class="fa-solid fa-money-bill"></i>
+                                    </span>
+                                    <input type="number" id="pricePerSeat" name="pricePerSeat" class="form-control"
+                                           placeholder="250" th:value="${pricePerSeat}" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Počet volných míst</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-from">
+                                        <i class="fa-solid fa-users"></i>
+                                    </span>
+                                    <input type="number" id="availableSeats" name="availableSeats" class="form-control"
+                                           placeholder="3" th:value="${availableSeats}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 flex-column d-flex justify-content-end">
+                                <label for="requiresApproval" class="form-label me-2">Chcete potvrzovat cestující?</label>
+                                <div>
+                                    <label for="requiresApproval" class="form-label me-2">Ano</label> <input type="checkbox" id="requiresApproval" class="form-check-input mb-2" th:field="*{requiresApproval}" />
+                                </div>
+                            </div>
 
-        <button type="submit" class="btn btn-primary">Vytvořit</button>
-    </form>
+                            <div class="col-12">
+                                <label for="additionalInformation" class="mb-2">Poznámky k jízdě</label><br>
+                                <div class="input-group">
+                                    <textarea id="additionalInformation" name="additionalInformation" class="w-100 form-control" placeholder="Doplňující informace k jízdě"></textarea>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Vytvořit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>

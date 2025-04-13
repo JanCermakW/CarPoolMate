@@ -27,6 +27,8 @@ public class Ride {
 
     private String formattedDepartureTime;
 
+    private String additionalInformation;
+
 
     private boolean available;
 
@@ -159,6 +161,14 @@ public class Ride {
 
     public void setPassengers(List<User> passengers) {
         this.passengers = passengers;
+    }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
     }
 }
 

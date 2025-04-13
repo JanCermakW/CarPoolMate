@@ -70,22 +70,66 @@
             </div>
         </div>
         <div class="col-md-8">
-            <!-- RIDE CARDS -->
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${rides != null}">
-                <div class="col" th:each="ride : ${rides}">
-                    <div class="card h-100 shadow-md">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${ride.startLocation} + ' → ' + ${ride.destination}"></h5>
-                            <p class="card-text">
-                                <strong>Datum:</strong> <span th:text="${ride.formattedDepartureTime}"></span><br>
-                                <strong>Cena za sedadlo:</strong> <span th:text="${ride.pricePerSeat} + ' Kč'"></span><br>
-                                <strong>Volná místa:</strong> <span th:text="${ride.availableSeats}"></span><br>
-                                <strong>Řidič:</strong>
-                                <a th:href="@{/profiles/{id}(id=${ride.driver.id})}"
-                                   th:text="${ride.driver.getFirstName() + ' ' + ride.driver.getLastName()}"></a>
 
-                            </p>
-                            <a th:href="@{'/rides/' + ${ride.id}}" class="btn btn-outline-primary">Zobrazit</a>
+            <div th:if="${param.success}">
+                <div class="alert alert-success">Úspěšně rezervované místo</div>
+            </div>
+
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">Chyba při rezervaci místa</div>
+            </div>
+
+
+            <!-- RIDE CARDS -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4" th:if="${rides != null}">
+                <div class="col" th:each="ride : ${rides}">
+                    <div class="card h-100 shadow-md ride-card">
+                        <div class="card-body">
+                            <div class="bg-primary">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="card-title" th:text="${ride.startLocation}"></h5>
+                                        <h5><i class="fa-solid fa-arrow-down text-secondary"></i></h5>
+                                        <h5 class="card-title" th:text="${ride.destination}"></h5>
+                                    </div>
+                                    <div class="col-6 d-flex align-items-center justify-content-end">
+                                        <h5 class="perseat"><span th:text="${#numbers.formatDecimal(ride.pricePerSeat, 0, 0)} + ' Kč'"></span><span class="text-small">za osobu</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                           <div class="card-content">
+                               <div class="card-text">
+                                   <div><i class="fa-solid fa-calendar me-2 text-secondary"></i><span th:text="${ride.formattedDepartureTime}"></span></div>
+                                   <div><i class="fa-solid fa-car-side me-2 text-secondary"></i><span th:text="${ride.driver.getCarType()}"></span></div>
+                                   <div><i class="fa-solid fa-users me-2 text-secondary"></i><span th:text="${ride.availableSeats}"></span></div>
+                                   <div class="d-flex gap-3 align-items-center">
+                                       <!-- Profile Picture -->
+                                       <img th:if="${not #strings.isEmpty(ride.driver.profilePicturePath)}"
+                                            th:src="${ride.driver.getProfilePicturePath()}"
+                                            alt="ProfilePic"
+                                            class="rounded-circle"
+                                            width="50px" height="50px">
+
+                                       <!-- Initials Fallback -->
+                                       <div th:if="${#strings.isEmpty(ride.driver.profilePicturePath)}"
+                                            class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                                            style="width: 50px; height: 50px; font-weight: bold;">
+                                           <span class="text-primary" th:text="${ride.driver.getFirstName().substring(0,1) + ride.driver.getLastName().substring(0,1)}"></span>
+                                       </div>
+
+                                       <!-- Driver Name and Role -->
+                                       <div class="d-flex flex-column">
+                                           <a th:href="@{/profiles/{id}(id=${ride.driver.id})}"
+                                              th:text="${ride.driver.getFirstName() + ' ' + ride.driver.getLastName()}"></a>
+                                           <span class="text-muted text-small">Řidič</span>
+                                       </div>
+                                   </div>
+
+                               </div>
+                               <form th:action="@{'/rides/book/' + ${ride.id}}" method="post">
+                                <button th:action="@{'/rides/book/' + ${ride.id}}" class="btn btn-secondary w-100 mt-4 fw-600">Rezervovat jízdu</button>
+                               </form>
+                           </div>
                         </div>
                     </div>
                 </div>
@@ -94,6 +138,7 @@
             <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
                 Žádné jízdy nebyly nalezeny pro zadané parametry.
             </div>
+
         </div>
     </div>
 </div>
