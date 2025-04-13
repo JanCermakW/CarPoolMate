@@ -34,6 +34,8 @@
             </ul>
             <a sec:authorize="isAuthenticated()" class="btn btn-outline-primary m-2" th:href="@{/user}"><i class="fa-solid fa-user"></i></a>
             <a sec:authorize="isAuthenticated()" class="btn btn-outline-secondary m-2" th:href="@{/logout}">Odhlásit se</a>
+            <a sec:authorize="!isAuthenticated()" class="btn btn-primary m-2" th:href="@{/login}">Přihlásit se</a>
+            <a sec:authorize="!isAuthenticated()" class="btn btn-secondary m-2" th:href="@{/registration}">Registrovat se</a>
         </div>
     </div>
 </nav>

@@ -28,7 +28,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                // Admin-only area
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                // Public resources and pages
                 .requestMatchers(
                         "/registration/**",
                         "/registration/verify**",
@@ -36,12 +39,24 @@ public class SecurityConfiguration {
                         "/forgotPasswd/verify**",
                         "/js/**",
                         "/styles/css/**",
-                        "/img/**").permitAll()
-                .anyRequest().authenticated()
+                        "/img/**",
+                        "/",
+                        "/home",
+                        "/about"
+                ).permitAll()
+
+                // Endpoints that require authenticated users (with USER or higher role)
+                .requestMatchers("/user/**", "/api/user/**").hasRole("USER")
+                .requestMatchers("/rides/book/**", "/rides/create/**", "/api/user/**").hasRole("DRIVER")
+
+                // Everything else is accessible (optional: you could also require authentication by default)
+                .anyRequest().permitAll()
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
+
                 .and()
                 .logout()
                 .invalidateHttpSession(true)
@@ -49,6 +64,7 @@ public class SecurityConfiguration {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
                 .permitAll();
+
         return http.build();
     }
 
