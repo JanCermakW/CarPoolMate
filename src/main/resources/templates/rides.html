@@ -14,6 +14,10 @@
         <div class="alert alert-success">Úspěšně vytvořena jízda</div>
     </div>
 
+    <div th:if="${successMessage}">
+        <div class="alert alert-success" th:text="${successMessage}"></div>
+    </div>
+
     <div class="row">
         <div class="col-md-4" style="height: fit-content">
             <div class="card h-100 shadow-lg">
@@ -77,6 +81,10 @@
 
             <div th:if="${param.error}">
                 <div class="alert alert-danger">Chyba při rezervaci místa</div>
+            </div>
+
+            <div th:if="${errorMessage}">
+                <div class="alert alert-danger" th:text="${errorMessage}"></div>
             </div>
 
 

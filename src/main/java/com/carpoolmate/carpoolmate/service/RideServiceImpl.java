@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RideServiceImpl implements RideService{
 
@@ -117,12 +119,47 @@ public class RideServiceImpl implements RideService{
 
     @Override
     public List<Ride> getRidesByUser(User user) {
-        return rideRepository.findByPassengersContaining(user);
+        List<Ride> all = rideRepository.findByPassengersContaining(user);
+        return all.stream()
+                .filter(ride -> ride.getDepartureTime().isAfter(LocalDateTime.now()))
+                .toList();
     }
 
     @Override
     public List<Ride> getRidesByDriver(User user) {
-        return rideRepository.findByDriverId(user.getId());
+
+        List<Ride> all = rideRepository.findByDriverId(user.getId());
+        return all.stream()
+                .filter(ride -> ride.getDepartureTime().isAfter(LocalDateTime.now()))
+                .toList();
+    }
+
+    @Override
+    public void unreserveRide(Long rideId) {
+        // Načtěte jízdu podle ID
+        Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new IllegalArgumentException("Jízda nenalezena"));
+
+        User currentUser = getCurrentUser();
+
+        if (ride.getDepartureTime().isBefore(LocalDateTime.now().plusHours(24))) {
+            throw new IllegalStateException("Nelze provést změnu méně než 24 hodin před odjezdem.");
+        }
+
+        // Přidání pasažéra do seznamu pasažérů
+        ride.getPassengers().remove(currentUser);
+
+        // Snížení počtu volných míst
+        ride.setAvailableSeats(ride.getAvailableSeats() + 1);
+
+        // Uložení jízdy
+        rideRepository.save(ride);
+    }
+
+    @Override
+    public void deleteRide(Long rideId) {
+        Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new IllegalArgumentException("Jízda nenalezena"));
+
+        rideRepository.delete(ride);
     }
 
 

@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService{
     public void sendEmail(User user, String content, String subject) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
         String fromAddress = "honzacermak74@gmail.com";
-        String senderName = "Realboss.co";
+        String senderName = "CarPoolMate.co";
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -161,7 +161,7 @@ public class UserServiceImpl implements UserService{
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">OVĚŘIT</a></h3>"
                 + "Děkujeme,<br>"
                 + "Realboss team.";
-        String subject = "Ověřte svůj email - Realboss";
+        String subject = "Ověřte svůj email - CarPoolMate";
 
         content = content.replace("[[name]]", user.getFirstName() + " " + user.getLastName());
         String verifyURL = siteURL + "/registration/verify?code=" + user.getVerificationCode();
@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService{
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">ZASLAT HESLO</a></h3>"
                 + "Děkujeme,<br>"
                 + "Realboss team.";
-        String subject = "Zapomenuté heslo - Realboss";
+        String subject = "Zapomenuté heslo - CarPoolMate";
 
         content = content.replace("[[name]]", user.getFirstName() + " " + user.getLastName());
         String verifyURL = siteURL + "/forgotPasswd/verify?code=" + user.getVerificationCode();

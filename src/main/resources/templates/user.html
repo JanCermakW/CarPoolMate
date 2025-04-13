@@ -70,6 +70,14 @@
                             </div>
                         </div>
 
+                        <div th:if="${successMessage}">
+                            <div class="alert alert-success" th:text="${successMessage}"></div>
+                        </div>
+
+                        <div th:if="${errorMessage}">
+                            <div class="alert alert-danger" th:text="${errorMessage}"></div>
+                        </div>
+
                         <h2>Uživatelské údaje</h2>
                         <form th:action="@{/user}" method="post" th:object="${user}">
                             <div class="row g-3">
@@ -248,7 +256,7 @@
                                 </div>
                                 <!-- No rides found -->
                                 <div th:if="${driversRides != null and #lists.isEmpty(driversRides)}" class="alert alert-warning mt-4">
-                                    Žádné jízdy nebyly nalezeny pro zadané parametry.
+                                    Žádné jízdy nebyly nalezeny.
                                 </div>
                             </div>
                         </div>
@@ -316,7 +324,7 @@
                                 </div>
                                 <!-- No rides found -->
                                 <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
-                                    Žádné jízdy nebyly nalezeny pro zadané parametry.
+                                    Žádné jízdy nebyly nalezeny.
                                 </div>
                             </div>
                         </div>

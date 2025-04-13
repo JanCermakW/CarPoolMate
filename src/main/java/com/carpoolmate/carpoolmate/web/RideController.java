@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class RideController {
@@ -123,14 +124,15 @@ public class RideController {
     }
 
     @PostMapping("/rides/book/{id}")
-    public String bookRide(@PathVariable Long id, Model model
+    public String bookRide(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes
     ) {
         try {
             rideService.bookRide(id); // Logika rezervace v RideService
             return "redirect:/rides/filter?success=reserved";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/rides/filter?error=bookingFailed"; // Chyba při rezervaci
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/rides/filter"; // Chyba při rezervaci
         }
     }
 
@@ -143,6 +145,35 @@ public class RideController {
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "redirect:/rides/{id}/passengers?error=passengersNotFound";
+        }
+    }
+
+    @PostMapping("/rides/unreserve/{id}")
+    public String unreserveRide(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes
+    ) {
+        try {
+            rideService.unreserveRide(id); // Logika oddělání rezervace v RideService
+            redirectAttributes.addFlashAttribute("successMessage", "Rezervace byla úspěšně zrušena.");
+            return "redirect:/user?successUnreserved";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user?errorUnreserved"; // Chyba při rezervaci
+        }
+    }
+
+
+    @PostMapping("/rides/delete/{id}")
+    public String deleteRide(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes
+    ) {
+        try {
+            rideService.deleteRide(id); // Logika oddělání rezervace v RideService
+            redirectAttributes.addFlashAttribute("successMessage", "Jízda úspěšně odstraněna.");
+            return "redirect:/user";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user";
         }
     }
 

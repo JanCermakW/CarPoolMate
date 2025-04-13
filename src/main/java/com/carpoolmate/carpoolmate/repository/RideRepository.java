@@ -20,10 +20,11 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
 
     @Query("SELECT r FROM Ride r WHERE " +
+            "r.departureTime >= CURRENT_DATE AND " +  // Only rides from today onwards
             "(:startLocation IS NULL OR LOWER(r.startLocation) LIKE LOWER(CONCAT('%', :startLocation, '%'))) AND " +
             "(:destination IS NULL OR LOWER(r.destination) LIKE LOWER(CONCAT('%', :destination, '%'))) AND " +
             "(:fromDate IS NULL OR r.departureTime >= :fromDate) AND " +
-            "(:toDate IS NULL OR r.departureTime < :toDate) AND " +  // notice: '<' instead of '<='
+            "(:toDate IS NULL OR r.departureTime < :toDate) AND " +
             "(:maxPrice IS NULL OR r.pricePerSeat <= :maxPrice) AND " +
             "(:minSeats IS NULL OR r.availableSeats >= :minSeats)")
     List<Ride> filterRides(
@@ -34,6 +35,7 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
             Double maxPrice,
             Integer minSeats
     );
+
 
     @Query("SELECT DISTINCT r.startLocation FROM Ride r WHERE LOWER(r.startLocation) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<String> findDistinctLocations(@Param("query") String query);

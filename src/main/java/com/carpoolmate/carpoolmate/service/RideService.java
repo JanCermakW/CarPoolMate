@@ -29,4 +29,7 @@ public interface RideService {
     List<Ride> getRidesByUser(User user);
 
     List<Ride> getRidesByDriver(User user);
+
+    public void unreserveRide(Long rideId);
+    void deleteRide(Long rideId);
 }
