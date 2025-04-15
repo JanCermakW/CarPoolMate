@@ -42,6 +42,8 @@ public class UserAccountController {
         model.addAttribute("rides", rideService.getRidesByUser(currentUser));
 
         model.addAttribute("driversRides", rideService.getRidesByDriver(currentUser));
+
+        model.addAttribute("pastRides", rideService.getPastRidesByUser(currentUser));
         return "user";
     }
 

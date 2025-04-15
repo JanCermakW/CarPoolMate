@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class RideServiceImpl implements RideService{
@@ -160,6 +161,19 @@ public class RideServiceImpl implements RideService{
         Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new IllegalArgumentException("Jízda nenalezena"));
 
         rideRepository.delete(ride);
+    }
+
+    @Override
+    public List<Ride> getPastRidesByUser(User user) {
+        List<Ride> asPassenger = rideRepository.findByPassengersContaining(user);
+        List<Ride> asDriver = rideRepository.findByDriverId(user.getId());
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return Stream.concat(asPassenger.stream(), asDriver.stream())
+                .filter(ride -> ride.getDepartureTime().isBefore(now))
+                .distinct() // avoids duplicates in case user is both driver & passenger (unlikely but safe)
+                .toList();
     }
 
 

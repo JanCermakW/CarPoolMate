@@ -32,4 +32,6 @@ public interface RideService {
 
     public void unreserveRide(Long rideId);
     void deleteRide(Long rideId);
+
+    List<Ride> getPastRidesByUser(User user);
 }

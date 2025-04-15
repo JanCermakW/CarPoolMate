@@ -134,8 +134,8 @@
                                    </div>
 
                                </div>
-                               <form th:action="@{'/rides/book/' + ${ride.id}}" method="post">
-                                <button th:action="@{'/rides/book/' + ${ride.id}}" class="btn btn-secondary w-100 mt-4 fw-600">Rezervovat jízdu</button>
+                               <form sec:authorize="isAuthenticated()" th:action="@{'/rides/book/' + ${ride.id}}" method="post">
+                                <button type="submit" class="btn btn-secondary w-100 mt-4 fw-600">Rezervovat jízdu</button>
                                </form>
                            </div>
                         </div>

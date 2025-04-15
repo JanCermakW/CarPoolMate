@@ -48,6 +48,13 @@
                                     <span class="badge-count" th:if="${#lists.isEmpty(rides)}" th:text="0"></span>
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pastRides-tab" data-bs-toggle="pill" data-bs-target="#pastRides" type="button" role="tab" aria-controls="pastRides" aria-selected="false">
+                                    Absolvované jízdy
+                                    <span class="badge-count" th:unless="${#lists.isEmpty(pastRides)}" th:text="${pastRides.size()}"></span>
+                                    <span class="badge-count" th:if="${#lists.isEmpty(pastRides)}" th:text="0"></span>
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -249,6 +256,10 @@
                                                     <form th:action="@{'/rides/delete/' + ${driversRide.id}}" method="post">
                                                         <button type="submit" class="btn btn-danger mt-4 w-100 fw-600">Zrušit jízdu</button>
                                                     </form>
+                                                    <a class="btn btn-outline-secondary w-100 mt-2"
+                                                       th:href="@{/rides/{id}/passengers(id=${driversRide.id})}">
+                                                        Pasažéři jízdy
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -324,6 +335,78 @@
                                 </div>
                                 <!-- No rides found -->
                                 <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
+                                    Žádné jízdy nebyly nalezeny.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- moje absolvované jízdy -->
+                    <div class="tab-pane fade" id="pastRides" role="tabpanel" aria-labelledby="pastRides-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="mb-4">Moje absolvované jízdy</h2>
+
+                                <!-- RIDE CARDS -->
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4" th:if="${pastRides != null}">
+                                    <div class="col" th:each="pastRide : ${pastRides}">
+                                        <div class="card h-100 shadow-md ride-card">
+                                            <div class="card-body">
+                                                <div class="bg-primary">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h5 class="card-title" th:text="${pastRide.startLocation}"></h5>
+                                                            <h5><i class="fa-solid fa-arrow-down text-secondary"></i></h5>
+                                                            <h5 class="card-title" th:text="${pastRide.destination}"></h5>
+                                                        </div>
+                                                        <div class="col-6 d-flex align-items-center justify-content-end">
+                                                            <h5 class="perseat"><span th:text="${#numbers.formatDecimal(pastRide.pricePerSeat, 0, 0)} + ' Kč'"></span><span class="text-small">za osobu</span></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div class="card-text">
+                                                        <span class="alert alert-warning" th:if="${pastRide.driver.id == user.id}">Zde jste byl řidičem</span>
+                                                        <div><i class="fa-solid fa-calendar me-2 text-secondary"></i><span th:text="${pastRide.formattedDepartureTime}"></span></div>
+                                                        <div><i class="fa-solid fa-car-side me-2 text-secondary"></i><span th:text="${pastRide.driver.getCarType()}"></span></div>
+                                                        <div><i class="fa-solid fa-users me-2 text-secondary"></i><span th:text="${pastRide.availableSeats}"></span></div>
+                                                        <div class="d-flex gap-3 align-items-center">
+                                                            <!-- Profile Picture -->
+                                                            <img th:if="${not #strings.isEmpty(pastRide.driver.profilePicturePath)}"
+                                                                 th:src="${pastRide.driver.getProfilePicturePath()}"
+                                                                 alt="ProfilePic"
+                                                                 class="rounded-circle"
+                                                                 width="50px" height="50px">
+
+                                                            <!-- Initials Fallback -->
+                                                            <div th:if="${#strings.isEmpty(pastRide.driver.profilePicturePath)}"
+                                                                 class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                                                                 style="width: 50px; height: 50px; font-weight: bold;">
+                                                                <span class="text-primary" th:text="${pastRide.driver.getFirstName().substring(0,1) + pastRide.driver.getLastName().substring(0,1)}"></span>
+                                                            </div>
+
+                                                            <!-- Driver Name and Role -->
+                                                            <div class="d-flex flex-column">
+                                                                <a th:href="@{/profiles/{id}(id=${pastRide.driver.id})}"
+                                                                   th:text="${pastRide.driver.getFirstName() + ' ' + pastRide.driver.getLastName()}"></a>
+                                                                <span class="text-muted text-small">Řidič</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <a class="btn btn-outline-secondary w-100 mt-3"
+                                                       th:href="@{/rides/{id}/passengers(id=${pastRide.id})}"
+                                                       th:if="${pastRide.driver.id == user.id}">
+                                                        Pasažéři jízdy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- No rides found -->
+                                <div th:if="${pastRides != null and #lists.isEmpty(pastRides)}" class="alert alert-warning mt-4">
                                     Žádné jízdy nebyly nalezeny.
                                 </div>
                             </div>
