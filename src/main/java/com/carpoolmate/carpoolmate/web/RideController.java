@@ -6,6 +6,8 @@ import com.carpoolmate.carpoolmate.model.RequestStatus;
 import com.carpoolmate.carpoolmate.model.User;
 import com.carpoolmate.carpoolmate.service.RideService;
 import com.carpoolmate.carpoolmate.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class RideController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RideController.class);
 
     @Autowired
     private RideService rideService;
@@ -54,6 +58,8 @@ public class RideController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "6") int size,
             Model model) {
+
+        logger.info("GET /rides/filter called");
 
         LocalDateTime from = null;
         LocalDateTime to = null;
@@ -165,6 +171,7 @@ public class RideController {
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            logger.error("Error při rezervaci jízdy", e);
             return "redirect:/rides/filter"; // Chyba při rezervaci
         }
     }
@@ -177,6 +184,7 @@ public class RideController {
             return "ride-passengers";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
+            logger.error("Error při získávání pasažérů", e);
             return "redirect:/rides/{id}/passengers?error=passengersNotFound";
         }
     }
@@ -191,6 +199,7 @@ public class RideController {
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            logger.error("Error při odrezervování", e);
             return "redirect:/user?errorUnreserved"; // Chyba při rezervaci
         }
     }
@@ -206,6 +215,7 @@ public class RideController {
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            logger.error("Error při mazání jízdy", e);
             return "redirect:/user";
         }
     }
