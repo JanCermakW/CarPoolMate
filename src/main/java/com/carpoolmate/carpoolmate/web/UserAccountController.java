@@ -1,5 +1,6 @@
 package com.carpoolmate.carpoolmate.web;
 
+import com.carpoolmate.carpoolmate.model.Ride;
 import com.carpoolmate.carpoolmate.model.Role;
 import com.carpoolmate.carpoolmate.model.User;
 import com.carpoolmate.carpoolmate.service.FileStorageService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -43,7 +45,13 @@ public class UserAccountController {
 
         model.addAttribute("driversRides", rideService.getRidesByDriver(currentUser));
 
-        model.addAttribute("pastRides", rideService.getPastRidesByUser(currentUser));
+        model.addAttribute("pastRides",
+                rideService.getPastRidesByUser(currentUser).stream()
+                        .sorted(Comparator.comparing(Ride::getDepartureTime).reversed())
+                        .limit(5)
+                        .toList());
+
+        model.addAttribute("waitingApprove", rideService.getRidesWaitingApprove(currentUser));
         return "user";
     }
 

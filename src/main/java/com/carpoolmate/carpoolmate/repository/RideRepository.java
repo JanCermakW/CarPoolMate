@@ -47,4 +47,7 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     Ride getRideById(Long id);
 
     List<Ride> findByPassengersContaining(User user);
+
+    @Query("SELECT r FROM Ride r WHERE r.departureTime < CURRENT_TIMESTAMP AND ((r.driver = :user1 AND :user2 MEMBER OF r.passengers) OR (r.driver = :user2 AND :user1 MEMBER OF r.passengers))")
+    List<Ride> findPastSharedRides(@Param("user1") User user1, @Param("user2") User user2);
 }

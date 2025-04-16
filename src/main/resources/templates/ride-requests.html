@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail jízdy | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body shadow-lg">
+            <h1>Žádosti o jízdu</h1>
+
+            <div th:if="${successMessage}" class="hide-after-10">
+                <div class="alert alert-success" th:text="${successMessage}"></div>
+            </div>
+
+            <div th:if="${errorMessage}" class="hide-after-10">
+                <div class="alert alert-danger" th:text="${errorMessage}"></div>
+            </div>
+
+            <h5 class="mt-4">✅ Schválení pasažéři</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Jméno</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="passenger : ${ride.passengers}">
+                    <td>
+                        <a th:href="@{/profiles/{id}(id=${passenger.id})}"
+                           th:text="${passenger.firstName + ' ' + passenger.lastName}"></a>
+                    </td>
+                    <td th:text="${passenger.email}"></td>
+                    <td th:text="${passenger.phoneNumber}"></td>
+                </tr>
+                <tr th:if="${ride.passengers.isEmpty()}">
+                    <td colspan="3" class="text-center text-muted">Nejsou žádní schválení pasažéři</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h5 class="mt-4">🕒 Čekající žádosti</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Jméno</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                    <th>Akce</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="request : ${requests}" th:if="${request.status.name() == 'PENDING'}">
+                    <td>
+                        <a th:href="@{/profiles/{id}(id=${request.passenger.id})}"
+                           th:text="${request.passenger.firstName + ' ' + request.passenger.lastName}"></a>
+                    </td>
+                    <td th:text="${request.passenger.email}"></td>
+                    <td th:text="${request.passenger.phoneNumber}"></td>
+                    <td>
+                        <form th:action="@{/rides/requests/{id}/approve(id=${request.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-success btn-sm">Schválit</button>
+                        </form>
+                        <form th:action="@{/rides/requests/{id}/reject(id=${request.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm">Zamítnout</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${requests.isEmpty()}">
+                    <td colspan="4" class="text-center text-muted">Žádné čekající žádosti</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-3">
+                <a th:href="@{/user}" class="btn btn-outline-primary">Zpět na profil</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/scripty"></div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

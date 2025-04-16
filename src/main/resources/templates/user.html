@@ -20,7 +20,7 @@
                                class="fa-solid fa-user"
                                style="font-size: 50px;"></i>
                             <div class="my-3">
-                                <h4 th:text="${user.firstName} + ' ' + ${user.lastName}"></h4>
+                                <a th:href="@{/profiles/{id}(id=${user.id})}"><h4 th:text="${user.firstName} + ' ' + ${user.lastName}"></h4></a>
                             </div>
                         </div>
                         <ul class="nav nav-pills flex-column justify-content-center align-items-center" id="userMenu" role="tablist">
@@ -46,6 +46,13 @@
                                     Rezervované jízdy
                                     <span class="badge-count" th:unless="${#lists.isEmpty(rides)}" th:text="${rides.size()}"></span>
                                     <span class="badge-count" th:if="${#lists.isEmpty(rides)}" th:text="0"></span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="waitingApprove-tab" data-bs-toggle="pill" data-bs-target="#waitingApprove" type="button" role="tab" aria-controls="waitingApprove" aria-selected="false">
+                                    Jízdy čekající na potvrzení řidičem
+                                    <span class="badge-count" th:unless="${#lists.isEmpty(waitingApprove)}" th:text="${waitingApprove.size()}"></span>
+                                    <span class="badge-count" th:if="${#lists.isEmpty(waitingApprove)}" th:text="0"></span>
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -171,7 +178,7 @@
                                             Pokud se chcete stát řidičem, nahrajte řidičský průkaz, vyplňte informace o autě a vyčkejte na ověření.
                                         </p>
                                     </div>
-                                    <div th:if="${not #strings.isEmpty(user.getIdPhotoPath()) and user.role.getName() != 'ROLE_DRIVER'}">
+                                    <div th:if="${not #strings.isEmpty(user.idPhotoPath) and #strings.equalsIgnoreCase(user.role.name, 'ROLE_USER')}">
                                         <p class="alert alert-danger">
                                             Váš profil ještě není ověřený jako řidičský!
                                         </p>
@@ -234,7 +241,7 @@
                                                             <img th:if="${not #strings.isEmpty(driversRide.driver.profilePicturePath)}"
                                                                  th:src="${driversRide.driver.getProfilePicturePath()}"
                                                                  alt="ProfilePic"
-                                                                 class="rounded-circle"
+                                                                 class="rounded-circle object-cover"
                                                                  width="50px" height="50px">
 
                                                             <!-- Initials Fallback -->
@@ -257,8 +264,8 @@
                                                         <button type="submit" class="btn btn-danger mt-4 w-100 fw-600">Zrušit jízdu</button>
                                                     </form>
                                                     <a class="btn btn-outline-secondary w-100 mt-2"
-                                                       th:href="@{/rides/{id}/passengers(id=${driversRide.id})}">
-                                                        Pasažéři jízdy
+                                                       th:href="@{/rides/{id}/requests(id=${driversRide.id})}">
+                                                        Žádosti o místo / pasažéři
                                                     </a>
                                                 </div>
                                             </div>
@@ -306,7 +313,7 @@
                                                             <img th:if="${not #strings.isEmpty(ride.driver.profilePicturePath)}"
                                                                  th:src="${ride.driver.getProfilePicturePath()}"
                                                                  alt="ProfilePic"
-                                                                 class="rounded-circle"
+                                                                 class="rounded-circle object-cover"
                                                                  width="50px" height="50px">
 
                                                             <!-- Initials Fallback -->
@@ -328,13 +335,104 @@
                                                     <form th:action="@{'/rides/unreserve/' + ${ride.id}}" method="post">
                                                         <button type="submit" class="btn btn-danger mt-4 w-100 fw-600">Zrušit rezervaci</button>
                                                     </form>
+                                                    <button type="button" class="btn btn-outline-secondary mt-2 w-100"
+                                                            th:attr="data-bs-toggle='modal', data-bs-target='#rideDetailsModal__' + ${ride.id}">
+                                                        Detail jízdy
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Ride Detail Modal -->
+                                        <div class="modal fade" th:id="'rideDetailsModal__' + ${ride.id}" tabindex="-1" aria-labelledby="rideDetailsModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content shadow">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Detail jízdy</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h6>Dodatečné informace:</h6>
+                                                        <p th:text="${ride.additionalInformation}">Žádné informace</p>
+                                                        <p th:if="${ride.additionalInformation.isEmpty()}" class="alert alert-warning">Řidič nenapsal žádne doplňující informace</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- No rides found -->
+                                <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
+                                    Žádné jízdy nebyly nalezeny.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- moje jízdy čekající na povrzení -->
+                    <div class="tab-pane fade" id="waitingApprove" role="tabpanel" aria-labelledby="waitingApprove-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="mb-4">Moje jízdy čekající na potvrzení</h2>
+
+                                <!-- RIDE CARDS -->
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4" th:if="${waitingApprove != null}">
+                                    <div class="col" th:each="waitingRide : ${waitingApprove}">
+                                        <div class="card h-100 shadow-md ride-card">
+                                            <div class="card-body">
+                                                <div class="bg-primary">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h5 class="card-title" th:text="${waitingRide.startLocation}"></h5>
+                                                            <h5><i class="fa-solid fa-arrow-down text-secondary"></i></h5>
+                                                            <h5 class="card-title" th:text="${waitingRide.destination}"></h5>
+                                                        </div>
+                                                        <div class="col-6 d-flex align-items-center justify-content-end">
+                                                            <h5 class="perseat"><span th:text="${#numbers.formatDecimal(waitingRide.pricePerSeat, 0, 0)} + ' Kč'"></span><span class="text-small">za osobu</span></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div class="card-text">
+                                                        <div><i class="fa-solid fa-calendar me-2 text-secondary"></i><span th:text="${waitingRide.formattedDepartureTime}"></span></div>
+                                                        <div><i class="fa-solid fa-car-side me-2 text-secondary"></i><span th:text="${waitingRide.driver.getCarType()}"></span></div>
+                                                        <div><i class="fa-solid fa-users me-2 text-secondary"></i><span th:text="${waitingRide.availableSeats}"></span></div>
+                                                        <div class="d-flex gap-3 align-items-center">
+                                                            <!-- Profile Picture -->
+                                                            <img th:if="${not #strings.isEmpty(waitingRide.driver.profilePicturePath)}"
+                                                                 th:src="${waitingRide.driver.getProfilePicturePath()}"
+                                                                 alt="ProfilePic"
+                                                                 class="rounded-circle object-cover"
+                                                                 width="50px" height="50px">
+
+                                                            <!-- Initials Fallback -->
+                                                            <div th:if="${#strings.isEmpty(waitingRide.driver.profilePicturePath)}"
+                                                                 class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                                                                 style="width: 50px; height: 50px; font-weight: bold;">
+                                                                <span class="text-primary" th:text="${waitingRide.driver.getFirstName().substring(0,1) + waitingRide.driver.getLastName().substring(0,1)}"></span>
+                                                            </div>
+
+                                                            <!-- Driver Name and Role -->
+                                                            <div class="d-flex flex-column">
+                                                                <a th:href="@{/profiles/{id}(id=${waitingRide.driver.id})}"
+                                                                   th:text="${waitingRide.driver.getFirstName() + ' ' + waitingRide.driver.getLastName()}"></a>
+                                                                <span class="text-muted text-small">Řidič</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- No rides found -->
-                                <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
+                                <div th:if="${waitingApprove != null and #lists.isEmpty(waitingApprove)}" class="alert alert-warning mt-4">
                                     Žádné jízdy nebyly nalezeny.
                                 </div>
                             </div>
@@ -375,7 +473,7 @@
                                                             <img th:if="${not #strings.isEmpty(pastRide.driver.profilePicturePath)}"
                                                                  th:src="${pastRide.driver.getProfilePicturePath()}"
                                                                  alt="ProfilePic"
-                                                                 class="rounded-circle"
+                                                                 class="rounded-circle object-cover"
                                                                  width="50px" height="50px">
 
                                                             <!-- Initials Fallback -->

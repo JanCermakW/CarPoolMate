@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil uživatele | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Flash Messages -->
+            <div th:if="${successMessage}" class="hide-after-10">
+                <div class="alert alert-success" th:text="${successMessage}"></div>
+            </div>
+            <div th:if="${errorMessage}" class="hide-after-10">
+                <div class="alert alert-danger" th:text="${errorMessage}"></div>
+            </div>
+
+            <!-- Profile Header -->
+            <div class="d-flex gap-3 align-items-center mb-3">
+                <img th:if="${not #strings.isEmpty(profileUser.profilePicturePath)}"
+                     th:src="${profileUser.getProfilePicturePath()}"
+                     alt="ProfilePic"
+                     class="rounded-circle object-cover"
+                     width="80px" height="80px">
+                <div th:if="${#strings.isEmpty(profileUser.profilePicturePath)}"
+                     class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                     style="width: 80px; height: 80px; font-weight: bold; font-size: 24px">
+                    <span class="text-primary" th:text="${profileUser.getFirstName().substring(0,1) + profileUser.getLastName().substring(0,1)}"></span>
+                </div>
+                <h2 th:text="${profileUser.firstName + ' ' + profileUser.lastName}">Jméno Příjmení</h2>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab">Statistiky</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="rides-tab" data-bs-toggle="tab" data-bs-target="#rides" type="button" role="tab">Společné jízdy</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Recenze</button>
+                </li>
+            </ul>
+
+            <!-- Tabs Content -->
+            <div class="tab-content pt-3" id="profileTabsContent">
+
+                <!-- Statistiky -->
+                <div class="tab-pane fade show active" id="stats" role="tabpanel">
+                    <ul>
+                        <li>Počet jízd jako řidič: <span th:text="${ridesAsDriver}"></span></li>
+                        <li>Počet jízd jako pasažér: <span th:text="${ridesAsPassenger}"></span></li>
+                        <li>
+                            Počet obdržených recenzí:
+                            <span th:text="${reviewsCount}"></span>
+                            (<span th:text="${ratingsAvg}"></span> <i class="fa-solid fa-star text-secondary"></i>)
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Společné jízdy -->
+                <div class="tab-pane fade" id="rides" role="tabpanel">
+                    <!-- RIDE CARDS -->
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${pastRides != null}">
+                        <div class="col" th:each="pastRide : ${pastRides}">
+                            <div class="card h-100 shadow-md ride-card">
+                                <div class="card-body">
+                                    <div class="bg-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h5 class="card-title" th:text="${pastRide.startLocation}"></h5>
+                                                <h5><i class="fa-solid fa-arrow-down text-secondary"></i></h5>
+                                                <h5 class="card-title" th:text="${pastRide.destination}"></h5>
+                                            </div>
+                                            <div class="col-6 d-flex align-items-center justify-content-end">
+                                                <h5 class="perseat"><span th:text="${#numbers.formatDecimal(pastRide.pricePerSeat, 0, 0)} + ' Kč'"></span><span class="text-small">za osobu</span></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-text">
+                                            <span class="alert alert-warning" th:if="${pastRide.driver.id == currentUser.id}">Zde jste byl řidičem</span>
+                                            <div><i class="fa-solid fa-calendar me-2 text-secondary"></i><span th:text="${pastRide.formattedDepartureTime}"></span></div>
+                                            <div><i class="fa-solid fa-car-side me-2 text-secondary"></i><span th:text="${pastRide.driver.getCarType()}"></span></div>
+                                            <div><i class="fa-solid fa-users me-2 text-secondary"></i><span th:text="${pastRide.availableSeats}"></span></div>
+                                            <div class="d-flex gap-3 align-items-center">
+                                                <!-- Profile Picture -->
+                                                <img th:if="${not #strings.isEmpty(pastRide.driver.profilePicturePath)}"
+                                                     th:src="${pastRide.driver.getProfilePicturePath()}"
+                                                     alt="ProfilePic"
+                                                     class="rounded-circle object-cover"
+                                                     width="50px" height="50px">
+
+                                                <!-- Initials Fallback -->
+                                                <div th:if="${#strings.isEmpty(pastRide.driver.profilePicturePath)}"
+                                                     class="rounded-circle bg-grey text-white d-flex justify-content-center align-items-center"
+                                                     style="width: 50px; height: 50px; font-weight: bold;">
+                                                    <span class="text-primary" th:text="${pastRide.driver.getFirstName().substring(0,1) + pastRide.driver.getLastName().substring(0,1)}"></span>
+                                                </div>
+
+                                                <!-- Driver Name and Role -->
+                                                <div class="d-flex flex-column">
+                                                    <a th:href="@{/profiles/{id}(id=${pastRide.driver.id})}"
+                                                       th:text="${pastRide.driver.getFirstName() + ' ' + pastRide.driver.getLastName()}"></a>
+                                                    <span class="text-muted text-small">Řidič</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <a th:if="${currentUser.id == pastRide.driver.id}" class="btn btn-outline-secondary w-100 mt-4"
+                                           th:href="@{/rides/{id}/passengers(id=${pastRide.id})}">
+                                            Pasažéři jízdy
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- No rides found -->
+                    <div th:if="${pastRides != null and #lists.isEmpty(pastRides)}" class="alert alert-warning mt-4">
+                        Žádné jízdy nebyly nalezeny.
+                    </div>
+                </div>
+
+                <!-- Recenze -->
+                <div class="tab-pane fade" id="reviews" role="tabpanel">
+                    <div th:if="${canWriteReview}">
+                        <h5>Napsat recenzi</h5>
+                        <form th:action="@{/reviews}" method="post">
+                            <input type="hidden" name="reviewedUserId" th:value="${profileUser.id}" />
+                            <div class="mb-3">
+                                <label for="rating" class="form-label">Počet hvězdiček</label>
+                                <input type="number" id="rating" class="form-control" name="rating" min="1" max="5" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Komentář</label>
+                                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Odeslat recenzi</button>
+                        </form>
+                    </div>
+                    <div th:unless="${canWriteReview}">
+                        <p>Recenzi lze napsat pouze v případě, že jste s uživatelem sdíleli jízdu.</p>
+                    </div>
+
+                    <hr>
+
+                    <h5>Obdržené recenze</h5>
+                    <div th:if="${receivedReviews != null and !receivedReviews.isEmpty()}">
+                        <ul class="list-group">
+                            <li class="list-group-item" th:each="review : ${receivedReviews}">
+                                <strong th:text="${review.reviewer.firstName + ' ' + review.reviewer.lastName}"></strong>
+                                <span class="text-muted" th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy')}"></span>
+                                <div>
+                                    <i class="fa-solid fa-star text-secondary me-1" th:each="i : ${#numbers.sequence(1, review.rating)}"></i>
+                                </div>
+                                <p th:text="${review.comment}"></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div th:if="${receivedReviews == null or receivedReviews.isEmpty()}">
+                        <p>Uživatel zatím nemá žádné recenze.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/scripty"></div>
+</body>
+</html>

@@ -34,4 +34,19 @@ public interface RideService {
     void deleteRide(Long rideId);
 
     List<Ride> getPastRidesByUser(User user);
+
+    public List<Ride> getPastDriverRidesByUser(User user);
+
+    public List<Ride> getPastPassengerRidesByUser(User user);
+
+    List<Ride> getPastSharedRides(User user, User user2);
+
+    Long getRideIdByRequest(Long rideId);
+
+    void approveRequest(Long requestId);
+
+    void rejectRequest(Long requestId);
+
+    List<Ride> getRidesWaitingApprove(User user);
+
 }

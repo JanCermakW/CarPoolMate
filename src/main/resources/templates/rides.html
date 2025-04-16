@@ -2,7 +2,7 @@
 <html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Domovská stránka | CarPoolMate</title>
+    <title>Vyhledávání jízd | CarPoolMate</title>
     <div th:replace="fragments/head"></div>
 </head>
 <body>
@@ -67,6 +67,18 @@
                             </div>
                         </div>
                         <div class="col-12">
+                            <label for="sortBy" class="form-label">Seřadit podle</label>
+                            <select name="sortBy" id="sortBy" class="form-select">
+                                <option th:value="dateAsc" th:selected="${sortBy == 'dateAsc'}">-- Vyberte možnost --</option>
+                                <option th:value="priceAsc" th:selected="${sortBy == 'priceAsc'}">Cena (od nejnižší)</option>
+                                <option th:value="priceDesc" th:selected="${sortBy == 'priceDesc'}">Cena (od nejvyšší)</option>
+                                <option th:value="nameAsc" th:selected="${sortBy == 'nameAsc'}">Řidič (A–Z)</option>
+                                <option th:value="nameDesc" th:selected="${sortBy == 'nameDesc'}">Řidič (Z–A)</option>
+                                <option th:value="dateAsc" th:selected="${sortBy == 'dateAsc'}">Datum odjezdu (nejbližší)</option>
+                                <option th:value="dateDesc" th:selected="${sortBy == 'dateDesc'}">Datum odjezdu (nejpozdější)</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
                             <button type="submit" class="btn btn-secondary w-100 mt-3"><i class="fas fa-search"></i> Vyhledat</button>
                         </div>
                     </form>
@@ -115,7 +127,7 @@
                                        <img th:if="${not #strings.isEmpty(ride.driver.profilePicturePath)}"
                                             th:src="${ride.driver.getProfilePicturePath()}"
                                             alt="ProfilePic"
-                                            class="rounded-circle"
+                                            class="rounded-circle object-cover"
                                             width="50px" height="50px">
 
                                        <!-- Initials Fallback -->
@@ -146,6 +158,59 @@
             <div th:if="${rides != null and #lists.isEmpty(rides)}" class="alert alert-warning mt-4">
                 Žádné jízdy nebyly nalezeny pro zadané parametry.
             </div>
+
+            <div class="d-flex justify-content-center mt-4" th:if="${totalPages > 1}">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/rides/filter(
+                        startLocation=${startLocation},
+                        destination=${destination},
+                        departureDate=${departureDate},
+                        departureTime=${departureTime},
+                        maxPrice=${maxPrice},
+                        minSeats=${minSeats},
+                        sortBy=${sortBy},
+                        page=${currentPage - 1},
+                        size=${size}
+                    )}">Předchozí</a>
+                        </li>
+
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/rides/filter(
+                        startLocation=${startLocation},
+                        destination=${destination},
+                        departureDate=${departureDate},
+                        departureTime=${departureTime},
+                        maxPrice=${maxPrice},
+                        minSeats=${minSeats},
+                        sortBy=${sortBy},
+                        page=${i},
+                        size=${size}
+                    )}" th:text="${i}">1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/rides/filter(
+                        startLocation=${startLocation},
+                        destination=${destination},
+                        departureDate=${departureDate},
+                        departureTime=${departureTime},
+                        maxPrice=${maxPrice},
+                        minSeats=${minSeats},
+                        sortBy=${sortBy},
+                        page=${currentPage + 1},
+                        size=${size}
+                    )}">Další</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
 
         </div>
     </div>
