@@ -1,0 +1,59 @@
+📘 User Guide – CarPoolMate
+🧭 Introduction
+CarPoolMate is a web application that allows users to share rides, save money, and connect with others traveling the same route.
+
+👤 Getting Started
+1. Registration
+Go to /registration
+
+Fill in your personal details (name, email, password)
+
+Optionally register as a driver by providing:
+
+Car type
+
+License plate
+
+Photo of driver’s license
+
+Submit the form and confirm your email via the link sent
+
+2. Login
+Visit /login
+
+Enter your email and password
+
+3. User Dashboard (/user)
+View your rides (as driver and passenger)
+
+See past rides and ride requests
+
+Update your profile or password
+
+Upload/change profile picture
+
+🚗 Ride Features
+Find Rides
+Navigate to /rides/filter
+
+Filter by location, date, price, seats, or driver rating
+
+Book a Ride
+Click on a ride and choose Book
+
+The driver can approve or reject your request
+
+Cancel Reservation
+On /user, click Cancel next to the ride
+
+🌟 Ratings & Reviews
+After completing a ride, visit the driver's profile
+
+Leave a review and rating (once per 2 months per person)
+
+🛡️ Account Settings
+Change password securely on /user
+
+Update personal details or address
+
+Upload driver license if becoming a driver

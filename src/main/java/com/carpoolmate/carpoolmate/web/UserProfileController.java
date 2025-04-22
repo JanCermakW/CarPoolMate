@@ -6,6 +6,9 @@ import com.carpoolmate.carpoolmate.model.User;
 import com.carpoolmate.carpoolmate.service.ReviewService;
 import com.carpoolmate.carpoolmate.service.RideService;
 import com.carpoolmate.carpoolmate.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +36,11 @@ public class UserProfileController {
 
     private final RideService rideService;
 
+    @Operation(summary = "View public user profile", description = "Displays the public profile of a specific user, including rides and reviews.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile data displayed successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @GetMapping("/{id}")
     public String getUserProfile(@PathVariable Long id, Model model, Principal principal) {
         User profileUser = userService.getUserById(id);

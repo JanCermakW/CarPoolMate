@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -33,6 +36,11 @@ public class ReviewsController {
         this.reviewService = reviewService;
     }
 
+    @Operation(summary = "Submit a review", description = "Saves a review for a specific user, ensuring no duplicates within 2 months.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Redirected after successful submission or validation failure"),
+            @ApiResponse(responseCode = "400", description = "Invalid review data or duplicate within restricted timeframe")
+    })
     @PostMapping
     public String saveReview(@ModelAttribute Review review,
                              @RequestParam("reviewedUserId") Long reviewedUserId,

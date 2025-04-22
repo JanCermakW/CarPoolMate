@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.io.UnsupportedEncodingException;
 
@@ -29,11 +32,18 @@ public class PasswordResetController {
         return new UserRegistrationDto();
     }
 
+    @Operation(summary = "Display password reset form", description = "Displays the form to initiate a password reset process.")
+    @ApiResponse(responseCode = "200", description = "Form displayed successfully")
     @GetMapping
     public String showForm() {
         return "forgot_passwd";
     }
 
+    @Operation(summary = "Send password reset email", description = "Sends a password reset verification email to the user's email address.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Email sent and user redirected"),
+            @ApiResponse(responseCode = "400", description = "Invalid or unknown email address")
+    })
     @PostMapping
     public String sendEmail(@ModelAttribute("user") UserRegistrationDto registrationDto, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
 
@@ -51,6 +61,11 @@ public class PasswordResetController {
         return siteURL.replace(request.getServletPath(), "");
     }
 
+    @Operation(summary = "Verify password reset code", description = "Verifies the reset code and sends a new password via email if valid.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Password reset completed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid or expired verification code")
+    })
     @GetMapping("/verify")
     public String verifyUser(@Param("code") String code) throws MessagingException, UnsupportedEncodingException {
         if (userService.verifyForgotPasswd(code)) {

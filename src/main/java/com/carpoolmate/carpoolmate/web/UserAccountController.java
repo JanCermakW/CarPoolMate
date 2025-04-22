@@ -13,6 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -33,6 +36,8 @@ public class UserAccountController {
     @Autowired
     private RideService rideService;
 
+    @Operation(summary = "Show user dashboard", description = "Displays user information, upcoming and past rides.")
+    @ApiResponse(responseCode = "200", description = "User dashboard loaded successfully")
     @GetMapping("/user")
     public String showUserDetails(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,6 +60,11 @@ public class UserAccountController {
         return "user";
     }
 
+    @Operation(summary = "Update user info", description = "Updates user profile details.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Redirected after successful update"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     @PostMapping("/user")
     public String updateUser(@ModelAttribute("user") User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,6 +84,11 @@ public class UserAccountController {
         return "redirect:/user?success";
     }
 
+    @Operation(summary = "Upload profile picture", description = "Uploads and sets a new profile picture for the user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Redirected after successful upload"),
+            @ApiResponse(responseCode = "400", description = "Invalid file or upload error")
+    })
     @PostMapping("/user/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) {
         User currentUser = userService.getUserByEmail(principal.getName());
@@ -86,6 +101,11 @@ public class UserAccountController {
         return "redirect:/user";
     }
 
+    @Operation(summary = "Change password", description = "Updates the user's password.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Password changed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid password format")
+    })
     @PostMapping("/user/passwd")
     public String changePasswd(@ModelAttribute("user") User user) {
 
@@ -106,6 +126,11 @@ public class UserAccountController {
         return "redirect:/user?success";
     }
 
+    @Operation(summary = "Update driver info", description = "Updates the driver's car and identification details.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Driver details updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid driver data")
+    })
     @PostMapping("/driver")
     public String updateDriver(@ModelAttribute("user") User driver) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

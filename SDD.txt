@@ -1,0 +1,142 @@
+📄 Software Design Document (SDD) for CarPoolMate
+1. Introduction
+1.1 Purpose
+This Software Design Document provides a detailed architectural and technical design for the CarPoolMate application. It describes how system requirements are implemented using a Spring Boot backend, thymeLeaf frontend, and MySQL database.
+
+1.2 Scope
+CarPoolMate allows users to share car rides, manage bookings, and interact within a trusted transportation community. Core features include user registration, authentication, ride creation, seat reservation, notifications, and rating mechanisms.
+
+1.3 Overview
+This document outlines the system's layered architecture, component responsibilities, database design, API structure, and security model. It also provides insight into future expansion opportunities.
+
+2. System Architecture
+2.1 Architecture Overview
+Frontend: thymeLeaf templates rendered via Spring MVC, styled using Bootstrap for responsiveness and clean design.
+
+Backend: Spring Boot-based REST API that handles business logic and security.
+
+Database: MySQL for persistent data storage and entity relationships.
+
+2.2 Component Breakdown
+Frontend Components (thymeLeaf + Bootstrap)
+Registration & Login Pages
+
+Ride Search & Filtering Interface
+
+Ride Management UI (create/edit rides)
+
+Ride Booking Interface
+
+User Profile & Review Display
+
+Backend Services (Spring Boot)
+UserService – Manages registration, authentication, and profile updates
+
+RideService – Handles ride creation, filtering, and passenger management
+
+ReviewService – Collects and retrieves user reviews
+
+EmailService – Sends notifications for registration, booking, and password recovery
+
+Database Tables (MySQL)
+users – Stores personal details, roles, and credentials
+
+rides – Contains ride offers and driver references
+
+ride_requests – Tracks booking requests, statuses
+
+reviews – Holds rating and textual feedback
+
+(No payments table — not implemented)
+
+3. Database Design
+3.1 Entity-Relationship Summary
+Users:
+
+id, first_name, last_name, email, password, role, profile_picture_path
+
+Rides:
+
+id, driver_id, origin, destination, departure_time, seats_available, price_per_seat
+
+RideRequests:
+
+id, ride_id, passenger_id, status, timestamp
+
+Reviews:
+
+id, reviewer_id, reviewed_id, rating, comment, created_at
+
+4. Application Layers
+4.1 Layered Architecture Overview
+
+Layer	Responsibilities
+Model	Entities representing users, rides, reviews, requests
+Repository	Interfaces for database operations (JPA/Hibernate)
+Service	Business logic and application flow control
+Web (Controller)	Handles HTTP requests, delegates to services
+Security	Authenticates users, manages session roles and permissions
+5. Frontend Design
+5.1 User Interface Components
+Login / Registration Form
+
+Email, password, name fields
+
+Driver option (car type, license plate, ID photo)
+
+Ride Filtering & Search Page
+
+Filters for origin, destination, date, time, and price
+
+Ride Details Page
+
+Ride info, driver details, book/cancel buttons
+
+User Dashboard (/user)
+
+Shows user's own rides, booked rides, pending approvals
+
+Public Profile Page
+
+User information, ride stats, received reviews
+
+6. Security Design
+Spring Security is used for:
+
+Login, session management
+
+Role-based access: USER, DRIVER, ADMIN
+
+Authorization rules via SecurityFilterChain
+
+BCrypt for secure password encryption
+
+Custom filters prevent unauthorized endpoint access
+
+Admin hierarchy: ADMIN > DRIVER > USER
+
+7. Logging & Monitoring
+Logging:
+
+Configured using SLF4J and Spring Boot logging levels
+
+Logs stored in logs/myapp.log
+
+Monitoring:
+
+Spring Boot Actuator exposes:
+
+/actuator/health, /actuator/info, /actuator/metrics
+
+Useful for runtime monitoring and basic analytics
+
+8. Future Enhancements
+Real-time notifications using WebSockets (e.g., ride updates)
+
+Mobile App using Flutter or React Native
+
+Ride matching algorithm based on proximity, frequent routes
+
+In-app messaging between driver and passenger
+
+Google Maps Integration for distance-based price suggestions

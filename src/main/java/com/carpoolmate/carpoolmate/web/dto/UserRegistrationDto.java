@@ -2,14 +2,23 @@ package com.carpoolmate.carpoolmate.web.dto;
 
 import com.carpoolmate.carpoolmate.model.Role;
 import com.carpoolmate.carpoolmate.model.RoleType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserRegistrationDto {
+    @NotBlank(message = "Jméno je potřeba vyplnit!")
     private String firstName;
+    @NotBlank(message = "Příjmení je potřeba vyplnit!")
     private String lastName;
+    @NotBlank(message = "Email je potřeba vyplnit!")
+    @Email(message = "Špatný formát emailu")
     private String email;
+    @NotBlank(message = "Heslo je potřeba vyplnit!")
+    @Size(min = 8, message = "Heslo musí mít alespoň 8 znaků!")
     private String password;
 
     private String carType;

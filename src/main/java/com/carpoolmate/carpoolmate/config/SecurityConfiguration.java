@@ -42,7 +42,8 @@ public class SecurityConfiguration {
                         "/img/**",
                         "/",
                         "/home",
-                        "/about"
+                        "/about",
+                        "/swagger-ui.html"
                 ).permitAll()
 
                 // Endpoints that require authenticated users (with USER or higher role)

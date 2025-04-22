@@ -1,0 +1,38 @@
+🛠 Admin Guide – CarPoolMate
+🔐 Default Admin Login
+Email: admin@example.com
+
+Password: admin
+
+📋 Admin Capabilities
+1. Role Hierarchy
+Admin > Driver > User
+
+Admins can access /admin/** endpoints (if defined)
+
+2. Managing Users (future)
+See list of users (not implemented in UI yet)
+
+Assign/remove roles manually in DB (via RoleType)
+
+3. System Monitoring
+Spring Boot Actuator enabled:
+
+/actuator/health
+
+/actuator/info
+
+/actuator/metrics
+
+Logs stored in: logs/myapp.log
+
+🧾 Swagger / API Docs
+Open http://localhost:8080/swagger-ui.html for full API documentation
+
+🛠 Future Admin Tools (suggested)
+User banning
+
+Manual ride approval
+
+Managing reviews or complaints
+

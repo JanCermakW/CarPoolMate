@@ -7,11 +7,16 @@ import com.carpoolmate.carpoolmate.service.UserService;
 import com.carpoolmate.carpoolmate.web.dto.UserRegistrationDto;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
@@ -39,17 +44,30 @@ public class AuthController {
         return new UserRegistrationDto();
     }
 
+    @Operation(summary = "Display registration form", description = "Displays the user registration form for new users or drivers.")
+    @ApiResponse(responseCode = "200", description = "Registration form displayed")
     @GetMapping
     public String showRegistrationForm() {
         return "registration";
     }
 
+    @Operation(summary = "Register new user", description = "Processes the user registration form, handles optional driver registration and sends verification email.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "302", description = "Redirects after successful or failed registration"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data or user already exists")
+    })
     @PostMapping
     public String registerUserAccount(
-            @ModelAttribute("user") UserRegistrationDto registrationDto,
+            @Valid @ModelAttribute("user") UserRegistrationDto registrationDto,
+            BindingResult bindingResult,
             @RequestParam(value = "registerAsDriver", defaultValue = "false") boolean registerAsDriver,
             @RequestParam(required = false) MultipartFile driverImage,
             HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+
+        // Validace selhala
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
 
         // Kontrola: uživatel již existuje
         if (userService.getUserByEmail(registrationDto.getEmail()) != null) {
@@ -90,6 +108,11 @@ public class AuthController {
         return siteURL.replace(request.getServletPath(), "");
     }
 
+    @Operation(summary = "Verify email", description = "Verifies a new user using a unique code sent via email.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Verification result page displayed"),
+            @ApiResponse(responseCode = "400", description = "Invalid or expired verification code")
+    })
     @GetMapping("/verify")
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {

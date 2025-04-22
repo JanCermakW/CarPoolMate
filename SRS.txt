@@ -1,0 +1,149 @@
+📄 Software Requirements Specification (SRS) for CarPoolMate
+1. Introduction
+1.1 Purpose
+CarPoolMate is a web application designed to facilitate carpooling by connecting drivers and passengers traveling in the same direction. Its main goals are to reduce travel costs, minimize environmental impact, and encourage community-based transportation.
+
+1.2 Scope
+The application enables users to register, offer or search for rides, reserve seats, and share travel details. It supports user authentication, ride creation, booking management, notifications, and rating. The system uses a Spring Boot backend, thymeLeaf frontend, and a MySQL database.
+
+1.3 Definitions, Acronyms, and Abbreviations
+SPZ – Vehicle license plate number
+
+API – Application Programming Interface
+
+JWT – JSON Web Token (not used)
+
+CRUD – Create, Read, Update, Delete
+
+1.4 Overview
+This document specifies the functional and non-functional requirements for CarPoolMate, describing its architecture, features, system behavior, and future plans.
+
+2. Overall Description
+2.1 Product Perspective
+CarPoolMate is a full-stack web application that integrates a thymeLeaf frontend with a Spring Boot backend. It is accessible from modern desktop and mobile browsers.
+
+2.2 User Classes and Characteristics
+Driver – Can create and manage rides, view passenger requests.
+
+Passenger – Can search for and request seats on available rides.
+
+Administrator – Has privileged access to manage users and review system operations.
+
+2.3 Operating Environment
+Backend: Java (Spring Boot), MySQL
+
+Frontend: thymeLeaf, Bootstrap
+
+Deployment: Local server or cloud environments (e.g., Heroku, Render)
+
+2.4 Design and Implementation Constraints
+thymeLeaf is used for view rendering.
+
+All communication uses HTTPS (secured transport).
+
+Authentication and authorization are handled via Spring Security and Role-Based Access Control (RBAC).
+
+No external payment integration is implemented yet.
+
+2.5 Assumptions and Dependencies
+Users must have internet access and a modern browser.
+
+The app is responsive and works on both desktop and mobile devices.
+
+3. Functional Requirements
+3.1 User Registration and Authentication
+Registration with email and password.
+
+Optional login via OAuth (Google/Facebook).
+
+Role-based access handled by Spring Security (Admin, Driver, User).
+
+3.2 Ride Management
+Drivers can:
+
+Create rides with details: origin, destination, time, seats, and price.
+
+Edit or cancel posted rides.
+
+Passengers can:
+
+Search and filter rides based on preferences.
+
+3.3 Booking System
+Passengers can request seat reservations.
+
+Drivers can accept or reject requests.
+
+Passengers can cancel bookings.
+
+3.4 Notifications
+Confirmation and update messages are sent via email (SMTP configured).
+
+3.5 Ratings and Reviews
+After each ride, users can review the driver or passenger.
+
+Reviews are restricted to one per user every two months.
+
+4. Non-Functional Requirements
+4.1 Performance
+API response time should remain under 1 second for 95% of requests.
+
+4.2 Security
+Encrypted passwords using BCrypt.
+
+Spring Security handles login, session management, and access control.
+
+CSRF protection and role-based authorization are enforced.
+
+4.3 Scalability
+Backend is stateless and can be scaled horizontally.
+
+MySQL can be deployed with replication for larger loads.
+
+4.4 Usability
+Clean, mobile-responsive UI built with Bootstrap.
+
+Consistent user experience with validation and feedback.
+
+5. System Features
+5.1 Ride Search and Filtering
+Filter rides by location, time, price, and seat availability.
+
+5.2 Ride Creation and Editing
+UI form for ride input and editing by drivers.
+
+5.3 Booking Requests
+Seat reservation flow with approval mechanism.
+
+5.4 User Profiles
+Includes contact info, profile picture, review history, and ride statistics.
+
+6. External Interfaces
+6.1 REST API
+Spring Boot REST endpoints consumed by thymeLeaf templates and AJAX.
+
+API documentation available via Swagger UI.
+
+6.2 Email Notifications
+Email system is configured using Spring Mail (SMTP).
+
+Used for verification, booking updates, and password recovery.
+
+7. Future Enhancements
+Integration of payment gateways (Stripe, GoPay) for cashless ride payments.
+
+Mobile version as Progressive Web App (PWA).
+
+Real-time location tracking via GPS integration.
+
+Admin dashboard for content moderation and analytics.
+
+Google Maps route integration for dynamic pricing or trip matching.
+
+8. Appendices
+ER Diagram of database schema.
+
+Sample ride flow and review flow (sequence diagrams).
+
+Swagger-generated API documentation available at /swagger-ui.html.
+
