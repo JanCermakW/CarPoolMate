@@ -33,6 +33,9 @@
                     <span class="text-primary" th:text="${profileUser.getFirstName().substring(0,1) + profileUser.getLastName().substring(0,1)}"></span>
                 </div>
                 <h2 th:text="${profileUser.firstName + ' ' + profileUser.lastName}">Jméno Příjmení</h2>
+        <div class="mt-2">
+            <a th:href="@{'/chat/' + ${profileUser.id}}" class="btn btn-outline-primary">Send Message</a>
+        </div>
             </div>
 
             <!-- Tabs Navigation -->

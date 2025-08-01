@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                 ).permitAll()
 
                 // Endpoints that require authenticated users (with USER or higher role)
-                .requestMatchers("/user/**", "/api/user/**", "/rides/book/**", "/profiles/**").hasRole("USER")
+                .requestMatchers("/user/**", "/api/user/**", "/rides/book/**", "/profiles/**", "/chat/**", "/messages/**").hasRole("USER")
                 .requestMatchers( "/rides/create/**", "/api/user/**").hasRole("DRIVER")
 
                 // Everything else is accessible (optional: you could also require authentication by default)

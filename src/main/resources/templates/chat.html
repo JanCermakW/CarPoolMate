@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-4">Chat</h2>
+            <div id="chat-box" style="height:300px;overflow-y:auto;border:1px solid #ccc;padding:10px;">
+                <div th:each="msg : ${messages}">
+                    <div th:text="${msg.sender.firstName} + ': ' + ${msg.content}" th:classappend="${msg.isRead} ? 'text-muted' : ''"></div>
+                </div>
+            </div>
+            <form class="mt-2" autocomplete="off" th:action="@{/chat/send}" method="post">
+                <input type="hidden" name="recipientId" th:value="${recipientId}" />
+                <div class="input-group">
+                    <input type="text" name="content" class="form-control" placeholder="Type a message..." required />
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/scripty"></div>
+</body>
+</html>

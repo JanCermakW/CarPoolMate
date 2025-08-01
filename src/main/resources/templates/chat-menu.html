@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zprávy | CarPoolMate</title>
+    <div th:replace="fragments/head"></div>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-4">Zprávy</h2>
+            <div class="list-group">
+                <div th:each="entry,iterStat : ${lastMessages}">
+                    <a th:href="@{'/chat/' + ${entry.key.id}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-2">
+                        <span>
+                            <b th:text="${entry.key.firstName + ' ' + entry.key.lastName}"></b>
+                            <span class="text-muted" th:text="${#temporals.format(entry.value.timestamp, 'dd.MM.yyyy HH:mm')}"></span>
+                        </span>
+                        <span class="ms-2">
+                            <span th:text="${entry.value.sender.firstName + ': '}" ></span>
+                            <span th:text="${entry.value.content}"></span>
+                        </span>
+                    </a>
+                </div>
+                <div th:if="${lastMessages.isEmpty()}">
+                    <span class="text-muted">Žádné zprávy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/scripty"></div>
+</body>
+</html>
